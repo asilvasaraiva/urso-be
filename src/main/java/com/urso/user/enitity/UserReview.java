@@ -12,7 +12,7 @@ public class UserReview implements Serializable {
     private final long idReview;
     private final long idPersonSender;
     private final long idPersonReceiver;
-    private final boolean status;
+    private final boolean status = false;
     private final LocalDateTime createdAt;
     private final String content;
 }

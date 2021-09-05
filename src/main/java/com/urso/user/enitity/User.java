@@ -17,6 +17,6 @@ public class User implements Serializable {
     private final String password;
     private final LocalDateTime age;
     private final LocalDateTime joinDate;
-    private final boolean isAdmin;
+    private final boolean isAdmin = false;
     private final List<UserReview> reviews;
 }
