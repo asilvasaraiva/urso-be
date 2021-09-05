@@ -1,4 +1,4 @@
-package com.urso.user.enitity;
+package com.urso.user.entity;
 
 import lombok.Data;
 

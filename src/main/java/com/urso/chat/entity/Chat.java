@@ -1,6 +1,6 @@
 package com.urso.chat.entity;
 
-import com.urso.user.enitity.User;
+import com.urso.user.entity.User;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -14,7 +14,7 @@ public class Chat implements Serializable {
     private final long idChat;
     private final long idChatOwner;
     private final LocalDateTime createAt;
-    private final List<ChatMessage> chatMessages;
+    private final List<ChatMessage> Messages;
     private final List<User> participants;
     private final Integer maxParticipants;
 
