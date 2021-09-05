@@ -19,7 +19,7 @@ public class DevProfile {
 
     @Bean
     public boolean instantiateH2Database(){
-        devProfileService.teste();
+       // devProfileService.teste();
         return true;
     }
 }

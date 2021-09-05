@@ -1,5 +1,6 @@
 package com.urso.chat.entity;
 
+import lombok.Builder;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -7,6 +8,9 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Data
+@Entity
+@Builder
+@Table(name = "chat_complain")
 public class ChatComplain implements Serializable {
     private static final long serialVersionUID = -560374191929774750L;
 
@@ -23,7 +27,6 @@ public class ChatComplain implements Serializable {
     private final long idChat;
 
     @Column(name = "dat_creation")
-    @Temporal(TemporalType.TIMESTAMP)
     private final LocalDateTime createAt;
 
     @Column(name = "content")

@@ -1,5 +1,6 @@
 package com.urso.chat.entity;
 
+import lombok.Builder;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -8,6 +9,7 @@ import java.time.LocalDateTime;
 
 @Data
 @Entity
+@Builder
 @Table(name = "chat_message")
 public class ChatMessage implements Serializable {
     private static final long serialVersionUID = 7954899713317230615L;
