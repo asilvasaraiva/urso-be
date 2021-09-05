@@ -11,7 +11,7 @@ public class AdminMessage implements Serializable {
 
     private final long idAdminMessage;
     private final long idUser;
-    private final boolean status = false;
+    private final boolean isRead = false;
     private final LocalDateTime createAt;
     private final String content;
 

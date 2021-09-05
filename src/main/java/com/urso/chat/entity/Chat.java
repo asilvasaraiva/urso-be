@@ -7,7 +7,9 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Data
 @Entity
@@ -28,11 +30,15 @@ public class Chat implements Serializable {
     private final LocalDateTime createAt;
 
     @OneToMany(mappedBy = "chat")
-    private final List<ChatMessage> messages= new ArrayList<>();
+    private final Set<ChatMessage> messages= new HashSet<>();
 
-    //private final List<User> participants;
+    @ManyToMany(mappedBy = "userChats")
+    private final Set<User> participants= new HashSet<>();
 
     @Column(name = "max_participants")
     private final Integer maxParticipants;
+
+    @Column(name = "is_chat_active")
+    private final boolean isChatActive;
 
 }

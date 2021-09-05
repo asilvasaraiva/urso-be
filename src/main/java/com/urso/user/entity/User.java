@@ -1,12 +1,15 @@
 package com.urso.user.entity;
 
+import com.urso.chat.entity.Chat;
 import lombok.Data;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Data
 @Entity
@@ -41,7 +44,14 @@ public class User implements Serializable {
     @Column(name = "is_admin")
     private final boolean isAdmin = false;
 
-
     @OneToMany(mappedBy = "userSender")
     private final List<UserReview> reviews = new ArrayList<>();
+
+    @ManyToMany
+    @JoinTable(
+            name = "user_chat",
+            joinColumns= @JoinColumn(name = "user_id"),
+            inverseJoinColumns =  @JoinColumn(name = "chat_id")
+    )
+    private final Set<Chat> userChats= new HashSet<>();
 }

@@ -25,7 +25,7 @@ public class UserReview implements Serializable {
     private final long idPersonReceiver;
 
     @Column(name = "status")
-    private final boolean status = false;
+    private final boolean isAccepted = false;
 
     @Column(name = "create_at")
     private final LocalDateTime createdAt;
