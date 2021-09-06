@@ -1,8 +1,10 @@
 package com.urso.chat.entity;
 
 import com.urso.user.entity.User;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -16,6 +18,8 @@ import java.util.Set;
 @Entity
 @Builder
 @Table(name = "chat")
+@NoArgsConstructor
+@AllArgsConstructor
 public class Chat implements Serializable {
     private static final long serialVersionUID = -8672516887125802883L;
 
@@ -23,24 +27,24 @@ public class Chat implements Serializable {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "chat_seq")
     @SequenceGenerator(name = "chat_seq", sequenceName = "sq_chat_id", allocationSize = 1)
     @Column(name = "id_chat")
-    private final long idChat;
+    private long idChat;
 
     @Column(name = "id_chat_owner")
-    private final long idChatOwner;
+    private long idChatOwner;
 
     @Column(name = "dat_creation")
-    private final LocalDateTime createAt;
+    private LocalDateTime createAt;
 
     @OneToMany(mappedBy = "chat")
-    private final Set<ChatMessage> messages= new HashSet<>();
+    private Set<ChatMessage> messages= new HashSet<>();
 
     @ManyToMany(mappedBy = "userChats")
-    private final Set<User> participants= new HashSet<>();
+    private Set<User> participants= new HashSet<>();
 
     @Column(name = "max_participants")
-    private final Integer maxParticipants;
+    private Integer maxParticipants;
 
     @Column(name = "is_chat_active")
-    private final boolean isChatActive;
+    private boolean isChatActive;
 
 }

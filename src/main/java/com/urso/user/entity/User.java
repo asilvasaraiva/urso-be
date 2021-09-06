@@ -1,53 +1,60 @@
 package com.urso.user.entity;
 
 import com.urso.chat.entity.Chat;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-@Data
+
 @Entity
-@Builder
 @Table(name = "user")
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class User implements Serializable {
     private static final long serialVersionUID = -5586800209897275150L;
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_seq")
     @SequenceGenerator(name = "user_seq", sequenceName = "sq_user_id", allocationSize = 1)
     @Column(name = "id_user")
-    private final long idUser;
+    private  long idUser;
 
     @Column(name = "user_name")
-    private final String name;
+    private  String name;
 
     @Column(name = "user_surname")
-    private final String surname;
+    private  String surname;
 
     @Column(name = "user_email")
-    private final String email;
+    private  String email;
 
     @Column(name = "password")
-    private final String password;
+    private  String password;
 
     @Column(name = "age")
-    private final LocalDateTime age;
+    private  LocalDate age;
 
     @Column(name = "join_date")
-    private final LocalDateTime joinDate;
+    private  LocalDate joinDate;
 
     @Column(name = "is_admin")
-    private final boolean isAdmin = false;
+    private boolean isAdmin = false;
 
     @OneToMany(mappedBy = "userSender")
-    private final List<UserReview> reviews = new ArrayList<>();
+    private List<UserReview> reviews = new ArrayList<>();
 
     @ManyToMany
     @JoinTable(
@@ -55,5 +62,8 @@ public class User implements Serializable {
             joinColumns= @JoinColumn(name = "user_id"),
             inverseJoinColumns =  @JoinColumn(name = "chat_id")
     )
-    private final Set<Chat> userChats= new HashSet<>();
+    private Set<Chat> userChats= new HashSet<>();
+
+
+
 }

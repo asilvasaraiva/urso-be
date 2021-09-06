@@ -20,19 +20,19 @@ public class AdminMessage implements Serializable {
 
     @Id
     @Column(name = "id_message")
-    private final long idMessage;
+    private long idMessage;
 
     @Column(name = "id_user_sender")
-    private final long idUserSender;
+    private long idUserSender;
 
     @Column(name = "is_read")
-    private final boolean isRead = false;
+    private boolean isRead = false;
 
     @Column(name = "dat_creation")
-    private final LocalDateTime createAt;
+    private LocalDateTime createAt;
 
     @Column(name = "content")
-    private final String content;
+    private String content;
 
 
 }
