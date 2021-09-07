@@ -1,9 +1,6 @@
 package com.urso.user.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -20,10 +17,13 @@ public class UserReview implements Serializable {
     private static final long serialVersionUID = -3788024303917538267L;
 
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_review_seq")
+    @SequenceGenerator(name = "user_review_seq", sequenceName = "seq_user_review_", allocationSize = 1)
     @Column(name = "id_review")
     private long idReview;
 
-    @ManyToOne()
+    @ManyToOne
+    @ToString.Exclude
     @JoinColumn(name = "user_id", nullable = false)
     private User userSender;
 

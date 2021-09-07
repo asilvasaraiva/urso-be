@@ -1,10 +1,7 @@
 package com.urso.chat.entity;
 
 import com.urso.user.entity.User;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -18,8 +15,8 @@ import java.util.Set;
 @Entity
 @Builder
 @Table(name = "chat")
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 public class Chat implements Serializable {
     private static final long serialVersionUID = -8672516887125802883L;
 
@@ -36,9 +33,11 @@ public class Chat implements Serializable {
     private LocalDateTime createAt;
 
     @OneToMany(mappedBy = "chat")
-    private Set<ChatMessage> messages= new HashSet<>();
+    @ToString.Exclude
+    private List<ChatMessage> messages= new ArrayList<>();
 
     @ManyToMany(mappedBy = "userChats")
+    @ToString.Exclude
     private Set<User> participants= new HashSet<>();
 
     @Column(name = "max_participants")
@@ -46,5 +45,18 @@ public class Chat implements Serializable {
 
     @Column(name = "is_chat_active")
     private boolean isChatActive;
+
+    public void addMessage(ChatMessage chatMessage){
+        this.messages.add(chatMessage);
+    }
+
+    public boolean addParticipants(User user){
+        if(this.participants.size()<maxParticipants){
+            this.participants.add(user);
+            return true;
+        }else{
+            return false;
+        }
+    }
 
 }

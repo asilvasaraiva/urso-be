@@ -53,7 +53,7 @@ public class User implements Serializable {
     @Column(name = "is_admin")
     private boolean isAdmin = false;
 
-    @OneToMany(mappedBy = "userSender")
+    @OneToMany(mappedBy = "userSender",cascade=CascadeType.ALL, fetch = FetchType.LAZY)
     private List<UserReview> reviews = new ArrayList<>();
 
     @ManyToMany
@@ -62,8 +62,19 @@ public class User implements Serializable {
             joinColumns= @JoinColumn(name = "user_id"),
             inverseJoinColumns =  @JoinColumn(name = "chat_id")
     )
-    private Set<Chat> userChats= new HashSet<>();
+    private List<Chat> userChats= new ArrayList<>();
 
+public boolean addReview(UserReview ur){
+    if(ur.isAccepted()){
+        this.reviews.add(ur);
+        return true;
+    }else{
+        return false;
+    }
+}
 
+public void addChat(Chat c){
+    this.userChats.add(c);
+}
 
 }

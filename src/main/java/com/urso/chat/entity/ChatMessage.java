@@ -1,9 +1,6 @@
 package com.urso.chat.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -28,6 +25,7 @@ public class ChatMessage implements Serializable {
     private long idUser;
 
     @ManyToOne
+    @ToString.Exclude
     @JoinColumn(name = "chat_id", nullable = false)
     private Chat chat;
 
