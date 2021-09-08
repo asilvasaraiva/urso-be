@@ -61,7 +61,7 @@ public class DevProfileService {
 
         UserReview userReview1 = createUserReview();
         UserReview userReview2 = createUserReview();
-//        UserReview userReview3 = createUserReview();
+
 
         userReview1.setUserSender(user1);
         userReview2.setUserSender(user2);
@@ -118,10 +118,22 @@ public class DevProfileService {
         user2.addChat(chat);
 
         ChatComplain chatComplain = createChatComplain();
-//        chatComplain.setIdChat(chat.getIdChat());
-//
-//        chatComplainRepository.save(chatComplain);
+
         userRepository.saveAll(Arrays.asList(user1,user2,user3));
+
+
+        List<Chat> c = chatRepository.findByParticipants(user1);
+
+        for(Chat u : c){
+            log.info(u.toString());
+        }
+
+
+        List<User> usr = userRepository.findByUserChats(chat);
+
+        for(User u : usr){
+            log.info(u.getName());
+        }
 
 
     }
@@ -163,7 +175,7 @@ public class DevProfileService {
     private Chat createChat(){
         return  Chat.builder()
                 .createAt(dt.atTime(00,00))
-                .participants(new HashSet<User>())
+                .participants(new ArrayList<>())
                 .messages(new ArrayList<>())
                 .isChatActive(true)
                 .maxParticipants(3)

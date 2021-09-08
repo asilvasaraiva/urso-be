@@ -59,8 +59,8 @@ public class User implements Serializable {
     @ManyToMany
     @JoinTable(
             name = "user_chat",
-            joinColumns= @JoinColumn(name = "user_id"),
-            inverseJoinColumns =  @JoinColumn(name = "chat_id")
+            joinColumns= @JoinColumn(name = "user_id",referencedColumnName = "id_user"),
+            inverseJoinColumns =  @JoinColumn(name = "chat_id",referencedColumnName = "id_chat")
     )
     private List<Chat> userChats= new ArrayList<>();
 

@@ -36,9 +36,9 @@ public class Chat implements Serializable {
     @ToString.Exclude
     private List<ChatMessage> messages= new ArrayList<>();
 
-    @ManyToMany(mappedBy = "userChats")
+    @ManyToMany(mappedBy = "userChats",fetch = FetchType.LAZY)
     @ToString.Exclude
-    private Set<User> participants= new HashSet<>();
+    private List<User> participants= new ArrayList<>();
 
     @Column(name = "max_participants")
     private Integer maxParticipants;
