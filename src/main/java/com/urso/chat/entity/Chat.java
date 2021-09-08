@@ -1,6 +1,7 @@
 package com.urso.chat.entity;
 
 import com.urso.user.entity.User;
+import com.urso.utils.chatandusers.entity.ChatsAndUsers;
 import lombok.*;
 
 import javax.persistence.*;
@@ -33,12 +34,15 @@ public class Chat implements Serializable {
     private LocalDateTime createAt;
 
     @OneToMany(mappedBy = "chat")
-    @ToString.Exclude
     private List<ChatMessage> messages= new ArrayList<>();
 
-    @ManyToMany(mappedBy = "userChats",fetch = FetchType.LAZY)
-    @ToString.Exclude
-    private List<User> participants= new ArrayList<>();
+
+//    @ManyToMany(mappedBy = "userChats")
+//    private Set<User> participants= new HashSet<>();
+
+    @OneToMany(mappedBy = "chat",cascade=CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<ChatsAndUsers> participants= new ArrayList<>();
+
 
     @Column(name = "max_participants")
     private Integer maxParticipants;
@@ -50,9 +54,9 @@ public class Chat implements Serializable {
         this.messages.add(chatMessage);
     }
 
-    public boolean addParticipants(User user){
-        if(this.participants.size()<maxParticipants){
-            this.participants.add(user);
+    public boolean addParticipants(ChatsAndUsers chatsAndUsers){
+        if(this.participants.size()<maxParticipants && chatsAndUsers.getChat().equals(this.idChat)){
+            this.participants.add(chatsAndUsers);
             return true;
         }else{
             return false;

@@ -1,6 +1,7 @@
 package com.urso.user.entity;
 
 import com.urso.chat.entity.Chat;
+import com.urso.utils.chatandusers.entity.ChatsAndUsers;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -56,13 +57,9 @@ public class User implements Serializable {
     @OneToMany(mappedBy = "userSender",cascade=CascadeType.ALL, fetch = FetchType.LAZY)
     private List<UserReview> reviews = new ArrayList<>();
 
-    @ManyToMany
-    @JoinTable(
-            name = "user_chat",
-            joinColumns= @JoinColumn(name = "user_id",referencedColumnName = "id_user"),
-            inverseJoinColumns =  @JoinColumn(name = "chat_id",referencedColumnName = "id_chat")
-    )
-    private List<Chat> userChats= new ArrayList<>();
+    @OneToMany(mappedBy = "user")
+    private List<ChatsAndUsers> listOfChats= new ArrayList<>();
+
 
 public boolean addReview(UserReview ur){
     if(ur.isAccepted()){
@@ -73,8 +70,9 @@ public boolean addReview(UserReview ur){
     }
 }
 
-public void addChat(Chat c){
-    this.userChats.add(c);
+public void addChat(ChatsAndUsers chatsAndUsers ){
+    if(chatsAndUsers.getUser().equals(this.idUser))
+    this.listOfChats.add(chatsAndUsers);
 }
 
 }

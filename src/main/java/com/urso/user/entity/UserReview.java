@@ -24,7 +24,7 @@ public class UserReview implements Serializable {
 
     @ManyToOne
     @ToString.Exclude
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_sender_id", nullable = false)
     private User userSender;
 
     @Column(name = "id_person_receiver")

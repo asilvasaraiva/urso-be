@@ -11,7 +11,8 @@ import com.urso.user.entity.User;
 import com.urso.user.entity.UserReview;
 import com.urso.user.repository.UserRepository;
 import com.urso.user.repository.UserReviewRepository;
-import com.urso.utils.DataUtils;
+import com.urso.utils.chatandusers.entity.ChatsAndUsers;
+import com.urso.utils.chatandusers.repository.ChatAndUseRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -39,6 +40,9 @@ public class DevProfileService {
     @Autowired
     private ChatComplainRepository chatComplainRepository;
 
+    @Autowired
+    private ChatAndUseRepository chatAndUseRepository;
+
 
 
 
@@ -47,6 +51,7 @@ public class DevProfileService {
 
 
     public  void InstantiateDataBase(){
+
 
 
 
@@ -65,26 +70,29 @@ public class DevProfileService {
 
         userReview1.setUserSender(user1);
         userReview2.setUserSender(user2);
-//        userReview3.setUserSender(user3);
+
 
         userReview1.setIdPersonReceiver(user2.getIdUser());
         userReview2.setIdPersonReceiver(user1.getIdUser());
-//        userReview3.setIdPersonReceiver(user2.getIdUser());
+
 
         userReviewRepository.save(userReview1);
         userReviewRepository.save(userReview2);
-//        userReviewRepository.save(userReview3);
 
         user1.addReview(userReview2);
         user2.addReview(userReview1);
-//        user3.addReview(userReview3);
+
 
         Chat chat = createChat();
 
         chat.setIdChatOwner(user1.getIdUser());
-        chat.addParticipants(user1);
-        chat.addParticipants(user2);
-        //chat.addParticipants(user3);
+
+
+        ChatsAndUsers chatsAndUsers1 = ChatsAndUsers.builder().user(user1).chat(chat).build();
+        ChatsAndUsers chatsAndUsers2 = ChatsAndUsers.builder().user(user2).chat(chat).build();
+        ChatsAndUsers chatsAndUsers3 = ChatsAndUsers.builder().user(user3).chat(chat).build();
+
+
 
 
         chatRepository.save(chat);
@@ -113,27 +121,39 @@ public class DevProfileService {
 
         //chat.setMessages(messages);
 
-        chatRepository.save(chat);
-        user1.addChat(chat);
-        user2.addChat(chat);
+        chatAndUseRepository.save(chatsAndUsers1);
+        chatAndUseRepository.save(chatsAndUsers2);
+        chatAndUseRepository.save(chatsAndUsers3);
+
+
+        chat.addParticipants(chatsAndUsers1);
+        chat.addParticipants(chatsAndUsers2);
+        chat.addParticipants(chatsAndUsers3);
+
+
+        user1.addChat(chatsAndUsers1);
+        user2.addChat(chatsAndUsers2);
 
         ChatComplain chatComplain = createChatComplain();
 
+        chatComplain.setIdChat(chat.getIdChat());
+
+        chatComplainRepository.save(chatComplain);
+
+        chatRepository.save(chat);
         userRepository.saveAll(Arrays.asList(user1,user2,user3));
 
 
-        List<Chat> c = chatRepository.findByParticipants(user1);
+        User userByUser = chatAndUseRepository.findByUser(user1);
+       // User userById = chatAndUseRepository.findUserById(user1.getIdUser());
 
-        for(Chat u : c){
-            log.info(u.toString());
-        }
+//        Chat chatByChat = chatAndUseRepository.findByChat(chat);
+//        Chat chatById = chatAndUseRepository.findChatById(chat.getIdChat());
 
-
-        List<User> usr = userRepository.findByUserChats(chat);
-
-        for(User u : usr){
-            log.info(u.getName());
-        }
+        log.info("userByUser: "+userByUser.getName());
+       // log.info("userById: "+userById.getName());
+//        log.info("chatByChat: "+chatByChat.getIdChat());
+//        log.info("chatById: "+chatById.getIdChat());
 
 
     }
@@ -148,7 +168,7 @@ public class DevProfileService {
                 .name("Teste 1")
                 .surname("Lorem")
                 .password("asdqwe")
-                .userChats(new ArrayList<>())
+                .listOfChats(new ArrayList<>())
                 .reviews(new ArrayList<UserReview>())
                 .build();
     }
@@ -175,7 +195,7 @@ public class DevProfileService {
     private Chat createChat(){
         return  Chat.builder()
                 .createAt(dt.atTime(00,00))
-                .participants(new ArrayList<>())
+                .participants(Collections.singletonList(new ChatsAndUsers()))
                 .messages(new ArrayList<>())
                 .isChatActive(true)
                 .maxParticipants(3)
