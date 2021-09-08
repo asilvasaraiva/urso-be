@@ -1,5 +1,6 @@
 package com.urso.user.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.urso.chat.entity.Chat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -53,10 +54,12 @@ public class User implements Serializable {
     @Column(name = "is_admin")
     private boolean isAdmin = false;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "userSender",cascade=CascadeType.ALL, fetch = FetchType.LAZY)
     private List<UserReview> reviews = new ArrayList<>();
 
     @ManyToMany
+    @JsonManagedReference
     @JoinTable(
             name = "user_chat",
             joinColumns= @JoinColumn(name = "user_id",referencedColumnName = "id_user"),

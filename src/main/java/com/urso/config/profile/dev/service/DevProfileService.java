@@ -167,16 +167,16 @@ public class DevProfileService {
         adminRepository.save(adminMessage);
 
 
-    //Queries in Repositories
+    //Queries in Repositories Uncomment below
 
-        List<Chat> c = chatRepository.findByParticipants(user1);
-        show(c);
-
-        List<ChatMessage> chatMessage =  chatMessageRepository.findByChat(chat);
-        show(chatMessage);
-
-        List<User> usr = userRepository.findByUserChats(chat2);
-        showName(usr);
+//        List<Chat> c = chatRepository.findByParticipants(user1);
+//        show(c);
+//
+//        List<ChatMessage> chatMessage =  chatMessageRepository.findByChat(chat);
+//        show(chatMessage);
+//
+//        List<User> usr = userRepository.findByUserChats(chat2);
+//        showName(usr);
 
 
 

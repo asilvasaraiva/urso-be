@@ -1,5 +1,8 @@
 package com.urso.chat.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.urso.user.entity.User;
 import lombok.*;
 
@@ -32,10 +35,12 @@ public class Chat implements Serializable {
     @Column(name = "dat_creation")
     private LocalDateTime createAt;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "chat")
     @ToString.Exclude
     private List<ChatMessage> messages= new ArrayList<>();
 
+    @JsonBackReference
     @ManyToMany(mappedBy = "userChats",fetch = FetchType.LAZY)
     @ToString.Exclude
     private List<User> participants= new ArrayList<>();

@@ -1,5 +1,7 @@
 package com.urso.user.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
@@ -25,6 +27,7 @@ public class UserReview implements Serializable {
     @ManyToOne
     @ToString.Exclude
     @JoinColumn(name = "id_user_sender", nullable = false)
+    @JsonBackReference
     private User userSender;
 
     @Column(name = "id_person_receiver")

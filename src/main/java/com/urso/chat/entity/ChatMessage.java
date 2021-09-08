@@ -1,5 +1,8 @@
 package com.urso.chat.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.*;
 
 import javax.persistence.*;
@@ -26,6 +29,7 @@ public class ChatMessage implements Serializable {
 
     @ManyToOne
     @ToString.Exclude
+    @JsonBackReference
     @JoinColumn(name = "chat_id", nullable = false)
     private Chat chat;
 
