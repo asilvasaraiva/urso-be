@@ -21,8 +21,8 @@ public class ChatMessage implements Serializable {
     @Column(name = "id_chat_message")
     private long idChatMessage;
 
-    @Column(name = "id_user")
-    private long idUser;
+    @Column(name = "id_user_sender")
+    private long idUserSender;
 
     @ManyToOne
     @ToString.Exclude
