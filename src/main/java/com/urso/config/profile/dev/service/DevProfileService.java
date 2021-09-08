@@ -172,8 +172,13 @@ public class DevProfileService {
         List<Chat> c = chatRepository.findByParticipants(user1);
         show(c);
 
+        List<ChatMessage> chatMessage =  chatMessageRepository.findByChat(chat);
+        show(chatMessage);
+
         List<User> usr = userRepository.findByUserChats(chat2);
         showName(usr);
+
+
 
 
 
