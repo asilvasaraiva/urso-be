@@ -15,6 +15,7 @@
 	<description>Back End da Aplicação Your Solution (UrSo)</description>
 	<properties>
 		<java.version>11</java.version>
+		<io.springfox.version>3.0.0</io.springfox.version>
 	</properties>
 	<dependencies>
 
@@ -63,6 +64,11 @@
 			<optional>true</optional>
 		</dependency>
 
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-boot-starter</artifactId>
+			<version>${io.springfox.version}</version>
+		</dependency>
 	</dependencies>
 
 	<build>
