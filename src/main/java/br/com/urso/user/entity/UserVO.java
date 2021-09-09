@@ -1,10 +1,21 @@
 package br.com.urso.user.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class UserVO {
 
     private long idUser;
@@ -17,12 +28,9 @@ public class UserVO {
 
     private String password;
 
-    private LocalDate age;
+    private String age;
 
-    private LocalDate joinDate;
+    private String joinDate;
 
-    private boolean isAdmin = false;
-
-    private List<UserReview> reviews = new ArrayList<>();
 
 }
