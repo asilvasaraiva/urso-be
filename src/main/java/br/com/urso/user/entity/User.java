@@ -2,6 +2,7 @@ package br.com.urso.user.entity;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import br.com.urso.chat.entity.Chat;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -25,36 +26,46 @@ public class User implements Serializable {
 
 
     @Id
+    @ApiModelProperty(value = "Código do usuário")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_seq")
     @SequenceGenerator(name = "user_seq", sequenceName = "sq_user_id", allocationSize = 1)
     @Column(name = "id_user")
     private  long idUser;
 
+    @ApiModelProperty(value = "Nome do usuário")
     @Column(name = "user_name")
     private  String name;
 
+    @ApiModelProperty(value = "Sobrenome do usuário")
     @Column(name = "user_surname")
     private  String surname;
 
+    @ApiModelProperty(value = "Email do usuário")
     @Column(name = "user_email")
     private  String email;
 
+    @ApiModelProperty(value = "Senha do usuário")
     @Column(name = "password")
     private  String password;
 
+    @ApiModelProperty(value = "Data de nascimento do usuário")
     @Column(name = "age")
     private  LocalDate age;
 
+    @ApiModelProperty(value = "Data de entrada do usuário no sistema")
     @Column(name = "join_date")
     private  LocalDate joinDate;
 
+    @ApiModelProperty(value = "Especifica se é um administrador")
     @Column(name = "is_admin")
     private boolean isAdmin = false;
 
+    @ApiModelProperty(value = "Lista de depoimentos do usuário")
     @JsonManagedReference
     @OneToMany(mappedBy = "userSender",cascade=CascadeType.ALL, fetch = FetchType.LAZY)
     private List<UserReview> reviews = new ArrayList<>();
 
+    @ApiModelProperty(value = "Lista de chats que o usuário participa")
     @ManyToMany
     @JsonManagedReference
     @JoinTable(
