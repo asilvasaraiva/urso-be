@@ -32,5 +32,7 @@ public class UserVO {
 
     private String joinDate;
 
+    private boolean isAdmin;
+
 
 }

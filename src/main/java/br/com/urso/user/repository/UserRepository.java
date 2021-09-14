@@ -10,4 +10,6 @@ public interface UserRepository extends JpaRepository<User,Long> {
 
     List<User> findByUserChats(Chat c);
 
+    List<User> findByIsAdmin(Boolean isAdmin);
+
 }

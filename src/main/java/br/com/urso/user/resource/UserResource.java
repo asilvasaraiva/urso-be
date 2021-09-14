@@ -4,6 +4,7 @@ import br.com.urso.exception.UserNotFoundException;
 import br.com.urso.user.entity.User;
 import br.com.urso.user.entity.UserVO;
 import br.com.urso.user.service.UserService;
+
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -46,4 +47,26 @@ public class UserResource {
     public ResponseEntity<User> userById(@PathVariable("idUser") Long idUser) throws UserNotFoundException {
         return ResponseEntity.ok(userService.getUserById(idUser));
     }
+
+    @GetMapping(value = "/{idUser}/admin", produces="application/json")
+    @ApiOperation(value = "Altera o status de adminstrador", response = ResponseEntity.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Status do usuário alterado com sucesso", response = UserVO.class, responseContainer = "Users"),
+            @ApiResponse(code = 404, message = "Usuário não encontrado"),
+            @ApiResponse(code = 500, message = "Erro interno") })
+    public ResponseEntity changeToAdmin (@PathVariable("idUser") Long idUser) throws UserNotFoundException {
+        return ResponseEntity.ok(userService.changeStatusAdmin(idUser));
+    }
+
+    @GetMapping(value = "/admins", produces="application/json")
+    @ApiOperation(value = "Retorna lista de Administradores", response = ResponseEntity.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Status do usuário alterado com sucesso", response = UserVO.class, responseContainer = "Users"),
+            @ApiResponse(code = 404, message = "Usuário não encontrado"),
+            @ApiResponse(code = 500, message = "Erro interno") })
+    public ResponseEntity getListOfAdminsByStatus () throws UserNotFoundException {
+        return ResponseEntity.ok(userService.getAdminUsers(true));
+    }
+
 }
+
