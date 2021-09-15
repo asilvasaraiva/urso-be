@@ -3,6 +3,7 @@ package br.com.urso.user.service;
 import br.com.urso.user.entity.User;
 import br.com.urso.exception.UserNotFoundException;
 import br.com.urso.user.entity.UserVO;
+import br.com.urso.user.mapper.UserMapper;
 import br.com.urso.user.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,10 +17,12 @@ import java.util.Optional;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final UserMapper userMapper;
 
     @Autowired
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, UserMapper userMapper) {
         this.userRepository = userRepository;
+        this.userMapper = userMapper;
     }
 
     public List<User> listUsers(){
@@ -38,12 +41,8 @@ public class UserService {
         }else{
             user.setAdmin(true);
         }
-        UserVO userVO =  UserVO.builder().build();
-        userVO.setIdUser(user.getIdUser());
-        userVO.setName(user.getName());
-        userVO.setAdmin(user.isAdmin());
-        userVO.setIdUser(user.getIdUser());
-        return userVO;
+        userRepository.save(user);
+        return userMapper.toUserVo(user);
     }
 
     public List<User> getAdminUsers(Boolean isAdmin){
