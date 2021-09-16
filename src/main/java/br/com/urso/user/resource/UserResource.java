@@ -34,7 +34,7 @@ public class UserResource {
             @ApiResponse(code = 200, message = "Lista retornada com sucesso", response = User.class, responseContainer = "Users"),
             @ApiResponse(code = 404, message = "Lista de usuários não existente"),
             @ApiResponse(code = 500, message = "Erro interno") })
-    public ResponseEntity<List<User>> listaOfUsers(){
+    public ResponseEntity<List<UserVO>> listaOfUsers(){
         return ResponseEntity.ok(userService.listUsers());
     }
 

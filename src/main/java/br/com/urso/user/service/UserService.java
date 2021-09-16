@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -25,8 +26,9 @@ public class UserService {
         this.userMapper = userMapper;
     }
 
-    public List<User> listUsers(){
-        return userRepository.findAll();
+    public List<UserVO> listUsers(){
+        List<User> users = userRepository.findAll();
+        return  users.stream().map(u ->userMapper.toUserVo(u)).collect(Collectors.toList());
     }
 
     public User getUserById(Long id) throws UserNotFoundException {

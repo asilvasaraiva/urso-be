@@ -8,7 +8,7 @@
 		<version>2.5.4</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com</groupId>
+	<groupId>br.com</groupId>
 	<artifactId>urso</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>urso</name>
@@ -102,7 +102,6 @@
 						<exclude>
 							<groupId>org.projectlombok</groupId>
 							<artifactId>lombok</artifactId>
-							<version>1.18.20</version>
 						</exclude>
 						<exclude>
 							<groupId>org.mapstruct</groupId>
