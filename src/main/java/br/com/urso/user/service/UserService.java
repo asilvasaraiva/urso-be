@@ -47,9 +47,9 @@ public class UserService {
         return userMapper.toUserVo(user);
     }
 
-    public List<User> getAdminUsers(Boolean isAdmin){
+    public List<UserVO> getAdminUsers(Boolean isAdmin){
         List<User> adminList = userRepository.findByIsAdmin(isAdmin);
-        return adminList;
+        return adminList.stream().map(u ->userMapper.toUserVo(u)).collect(Collectors.toList());
     }
 
 }
