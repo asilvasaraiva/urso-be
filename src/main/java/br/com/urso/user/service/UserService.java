@@ -36,6 +36,15 @@ public class UserService {
         return user.orElseThrow(()-> new UserNotFoundException("User: "+id +" not found in database"));
     }
 
+    public UserVO update(Long idUser, UserVO userVO ) throws UserNotFoundException {
+
+        userVO.setIdUser(idUser);
+        User user = getUserById(idUser);
+         userRepository.save(user.merge(userVO));
+        return userMapper.toUserVo(user);
+    }
+
+
     public UserVO changeStatusAdmin(Long idUser){
         User user = getUserById(idUser);
         if(user.isAdmin()){

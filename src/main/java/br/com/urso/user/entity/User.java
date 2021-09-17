@@ -88,4 +88,23 @@ public void addChat(Chat c){
     this.userChats.add(c);
 }
 
+public User merge(UserVO newUser ){
+
+    if(newUser.getName()!=null){
+        this.setName(newUser.getName());
+    }
+
+    if(newUser.getSurname()!=null){
+        this.setSurname(newUser.getSurname());
+    }
+
+    if(newUser.getAge()!=null){
+        this.setAge(LocalDate.parse( newUser.getAge()));
+    }
+
+    if(newUser.getEmail()!=null){
+        this.setEmail(newUser.getEmail());
+    }
+    return this;
+}
 }
