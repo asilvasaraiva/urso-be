@@ -36,6 +36,10 @@ public class UserService {
         return user.orElseThrow(()-> new UserNotFoundException("User: "+id +" not found in database"));
     }
 
+    public User createUser(User user )  {
+        return userRepository.save(user);
+    }
+
     public UserVO update(Long idUser, UserVO userVO ) throws UserNotFoundException {
 
         userVO.setIdUser(idUser);

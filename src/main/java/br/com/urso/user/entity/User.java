@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.validation.annotation.Validated;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -54,20 +55,18 @@ public class User implements Serializable {
 
     @ApiModelProperty(value = "Data de entrada do usuário no sistema")
     @Column(name = "join_date")
-    private  LocalDate joinDate;
+    private  LocalDate joinDate = LocalDate.now();
 
     @ApiModelProperty(value = "Especifica se é um administrador")
     @Column(name = "is_admin")
     private boolean isAdmin = false;
 
     @ApiModelProperty(value = "Lista de depoimentos do usuário")
-    @JsonManagedReference
     @OneToMany(mappedBy = "userSender",cascade=CascadeType.ALL, fetch = FetchType.LAZY)
     private List<UserReview> reviews = new ArrayList<>();
 
     @ApiModelProperty(value = "Lista de chats que o usuário participa")
     @ManyToMany
-    @JsonManagedReference
     @JoinTable(
             name = "user_chat",
             joinColumns= @JoinColumn(name = "user_id",referencedColumnName = "id_user"),

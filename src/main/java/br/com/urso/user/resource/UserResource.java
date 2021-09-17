@@ -9,7 +9,10 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -45,10 +48,17 @@ public class UserResource {
         return ResponseEntity.ok(userService.getUserById(idUser));
     }
 
+    @PostMapping(value = "/create", consumes={"application/json"})
+    @ApiOperation(value = "Cria um novo usuário", response = ResponseEntity.class)
+    @ResponseStatus(code= HttpStatus.CREATED)
+    public ResponseEntity create(@Validated @RequestBody User user) throws UserNotFoundException {
+        return ResponseEntity.ok(userService.createUser(user));
+    }
+
     @PutMapping("/{idUser}/update")
     @ApiOperation(value = "Atualiza um usuário específico por ID", response = ResponseEntity.class)
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Usuário retornado com sucesso", response = UserVO.class, responseContainer = "Users"),
+            @ApiResponse(code = 200, message = "Usuário atualizado com sucesso", response = UserVO.class, responseContainer = "Users"),
             @ApiResponse(code = 404, message = "Usuário não encontrado"),
             @ApiResponse(code = 500, message = "Erro interno") })
     public ResponseEntity<UserVO> updateUser(@PathVariable("idUser") Long idUser,@RequestBody UserVO userVO) throws UserNotFoundException {
