@@ -1,6 +1,6 @@
 package br.com.urso.user.resource;
 
-import br.com.urso.exception.UserNotFoundException;
+import br.com.urso.user.exception.UserNotFoundException;
 import br.com.urso.user.entity.User;
 import br.com.urso.user.entity.UserVO;
 import br.com.urso.user.service.UserService;
@@ -9,12 +9,10 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -50,8 +48,7 @@ public class UserResource {
 
     @PostMapping(value = "/create", consumes={"application/json"})
     @ApiOperation(value = "Cria um novo usuário", response = ResponseEntity.class)
-    @ResponseStatus(code= HttpStatus.CREATED)
-    public ResponseEntity create(@Validated @RequestBody User user) throws UserNotFoundException {
+    public ResponseEntity create(@Valid @RequestBody User user) {
         return ResponseEntity.ok(userService.createUser(user));
     }
 

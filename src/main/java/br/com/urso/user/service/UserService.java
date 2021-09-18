@@ -1,12 +1,14 @@
 package br.com.urso.user.service;
 
 import br.com.urso.user.entity.User;
-import br.com.urso.exception.UserNotFoundException;
+import br.com.urso.user.exception.UserNotFoundException;
 import br.com.urso.user.entity.UserVO;
 import br.com.urso.user.mapper.UserMapper;
 import br.com.urso.user.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -36,8 +38,13 @@ public class UserService {
         return user.orElseThrow(()-> new UserNotFoundException("User: "+id +" not found in database"));
     }
 
-    public User createUser(User user )  {
-        return userRepository.save(user);
+    public ResponseEntity createUser(User user ) {
+        if(userRepository.findByEmail(user.getEmail())==null){
+
+            return ResponseEntity.ok().body(userRepository.save(user));
+        }else {
+            return ResponseEntity.badRequest().body(HttpStatus.FORBIDDEN);
+        }
     }
 
     public UserVO update(Long idUser, UserVO userVO ) throws UserNotFoundException {

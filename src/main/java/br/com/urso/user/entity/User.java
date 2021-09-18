@@ -1,5 +1,6 @@
 package br.com.urso.user.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import br.com.urso.chat.entity.Chat;
 import io.swagger.annotations.ApiModelProperty;
@@ -10,6 +11,9 @@ import lombok.NoArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -35,22 +39,28 @@ public class User implements Serializable {
 
     @ApiModelProperty(value = "Nome do usuário")
     @Column(name = "user_name")
+    @NotEmpty(message = "Nome não pode ser vazio")
     private  String name;
 
     @ApiModelProperty(value = "Sobrenome do usuário")
     @Column(name = "user_surname")
+    @NotEmpty(message = "Sobrenome não pode ser vazio")
     private  String surname;
 
     @ApiModelProperty(value = "Email do usuário")
     @Column(name = "user_email")
+    @NotEmpty(message = "Email não pode ser vazio")
+    @Email(message = "Email deve ser válido")
     private  String email;
 
     @ApiModelProperty(value = "Senha do usuário")
     @Column(name = "password")
+    @NotEmpty(message = "Senha não pode ser vazia")
     private  String password;
 
     @ApiModelProperty(value = "Data de nascimento do usuário")
     @Column(name = "age")
+    @NotNull(message = "Idade não pode ser vazio")
     private  LocalDate age;
 
     @ApiModelProperty(value = "Data de entrada do usuário no sistema")
