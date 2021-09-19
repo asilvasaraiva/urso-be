@@ -1,5 +1,6 @@
 package br.com.urso.user.resource;
 
+import br.com.urso.user.exception.DataIntegrityException;
 import br.com.urso.user.exception.UserNotFoundException;
 import br.com.urso.user.entity.User;
 import br.com.urso.user.entity.UserVO;
@@ -48,11 +49,15 @@ public class UserResource {
 
     @PostMapping(value = "/create", consumes={"application/json"})
     @ApiOperation(value = "Cria um novo usuário", response = ResponseEntity.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Usuário criado com sucesso", response = UserVO.class, responseContainer = "Users"),
+            @ApiResponse(code = 403, message = "Usuário já cadastrado"),
+            @ApiResponse(code = 500, message = "Erro interno") })
     public ResponseEntity create(@Valid @RequestBody User user) {
         return ResponseEntity.ok(userService.createUser(user));
     }
 
-    @PutMapping("/{idUser}/update")
+    @PutMapping("/{idUser}/edit")
     @ApiOperation(value = "Atualiza um usuário específico por ID", response = ResponseEntity.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Usuário atualizado com sucesso", response = UserVO.class, responseContainer = "Users"),
@@ -61,6 +66,17 @@ public class UserResource {
     public ResponseEntity<UserVO> updateUser(@PathVariable("idUser") Long idUser,@RequestBody UserVO userVO) throws UserNotFoundException {
         return ResponseEntity.ok(userService.update(idUser,userVO));
     }
+
+    @DeleteMapping(value = "/{idUser}/delete", produces="application/json")
+    @ApiOperation(value = "Deleta um usuário específico por ID", response = ResponseEntity.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Usuário deletado com sucesso", response = UserVO.class, responseContainer = "Users"),
+            @ApiResponse(code = 404, message = "Usuário não encontrado"),
+            @ApiResponse(code = 500, message = "Erro interno") })
+    public ResponseEntity deleteUser (@PathVariable("idUser") Long idUser){
+        return ResponseEntity.ok(userService.deleteUser(idUser));
+    }
+
 
     @GetMapping(value = "/{idUser}/admin", produces="application/json")
     @ApiOperation(value = "Altera o status de adminstrador", response = ResponseEntity.class)

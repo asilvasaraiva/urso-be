@@ -1,12 +1,14 @@
 package br.com.urso.user.service;
 
 import br.com.urso.user.entity.User;
+import br.com.urso.user.exception.DataIntegrityException;
 import br.com.urso.user.exception.UserNotFoundException;
 import br.com.urso.user.entity.UserVO;
 import br.com.urso.user.mapper.UserMapper;
 import br.com.urso.user.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -40,7 +42,6 @@ public class UserService {
 
     public ResponseEntity createUser(User user ) {
         if(userRepository.findByEmail(user.getEmail())==null){
-
             return ResponseEntity.ok().body(userRepository.save(user));
         }else {
             return ResponseEntity.badRequest().body(HttpStatus.FORBIDDEN);
@@ -48,13 +49,21 @@ public class UserService {
     }
 
     public UserVO update(Long idUser, UserVO userVO ) throws UserNotFoundException {
-
         userVO.setIdUser(idUser);
         User user = getUserById(idUser);
          userRepository.save(user.merge(userVO));
         return userMapper.toUserVo(user);
     }
 
+    public ResponseEntity deleteUser(Long id){
+        getUserById(id);
+        try {
+            userRepository.deleteById(id);
+            return ResponseEntity.ok(HttpStatus.NO_CONTENT);
+        }catch(DataIntegrityViolationException e){
+            throw new DataIntegrityException("Não foi possível excluir, pois o usuário não existe");
+        }
+    }
 
     public UserVO changeStatusAdmin(Long idUser){
         User user = getUserById(idUser);
