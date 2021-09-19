@@ -1,5 +1,6 @@
 package br.com.urso.user.resource;
 
+import br.com.urso.user.entity.UserReview;
 import br.com.urso.user.exception.DataIntegrityException;
 import br.com.urso.user.exception.UserNotFoundException;
 import br.com.urso.user.entity.User;
@@ -98,5 +99,15 @@ public class UserResource {
         return ResponseEntity.ok(userService.getAdminUsers(true));
     }
 
+
+    @PostMapping(value = "/{idUser}/review/create2/{idReceiver}", consumes={"application/json"})
+    @ApiOperation(value = "Cria um depoimento para um outro  usuário", response = ResponseEntity.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Depoimento criado com sucesso", response = UserVO.class, responseContainer = "Users"),
+            @ApiResponse(code = 404, message = "Usuário destinatário  não encontrado"),
+            @ApiResponse(code = 500, message = "Erro interno") })
+    public ResponseEntity createReview(@Valid @RequestBody UserReview userReview,@PathVariable("idUser") Long idUser, @PathVariable("idReceiver") Long idReceiver) {
+        return ResponseEntity.ok(userService.createReaview(userReview,idUser,idReceiver));
+    }
 }
 

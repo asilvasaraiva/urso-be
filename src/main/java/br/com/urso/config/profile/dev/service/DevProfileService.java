@@ -68,12 +68,13 @@ public class DevProfileService {
         UserReview userReview3 = createUserReview();
 
         userReview1.setUserSender(user1);
-        userReview2.setUserSender(user2);
-        userReview3.setUserSender(user3);
+        userReview1.setUserReceiver(user2);
 
-        userReview1.setIdPersonReceiver(user2.getIdUser());
-        userReview2.setIdPersonReceiver(user1.getIdUser());
-        userReview3.setIdPersonReceiver(user2.getIdUser());
+        userReview2.setUserSender(user2);
+        userReview2.setUserReceiver(user1);
+
+        userReview3.setUserSender(user3);
+        userReview3.setUserReceiver(user2);
         userReviewRepository.saveAll(Arrays.asList(userReview1,userReview2,userReview3));
 
 

@@ -1,11 +1,13 @@
 package br.com.urso.user.service;
 
 import br.com.urso.user.entity.User;
+import br.com.urso.user.entity.UserReview;
 import br.com.urso.user.exception.DataIntegrityException;
 import br.com.urso.user.exception.UserNotFoundException;
 import br.com.urso.user.entity.UserVO;
 import br.com.urso.user.mapper.UserMapper;
 import br.com.urso.user.repository.UserRepository;
+import br.com.urso.user.repository.UserReviewRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -22,13 +24,17 @@ import java.util.stream.Collectors;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final UserReviewRepository userReviewRepository;
     private final UserMapper userMapper;
 
     @Autowired
-    public UserService(UserRepository userRepository, UserMapper userMapper) {
+    public UserService(UserRepository userRepository, UserReviewRepository userReviewRepository, UserMapper userMapper) {
         this.userRepository = userRepository;
+        this.userReviewRepository = userReviewRepository;
         this.userMapper = userMapper;
     }
+
+    //---SECTION OF USER ----///
 
     public List<UserVO> listUsers(){
         List<User> users = userRepository.findAll();
@@ -65,6 +71,9 @@ public class UserService {
         }
     }
 
+
+    //-----ADMIN SECTION----//
+
     public UserVO changeStatusAdmin(Long idUser){
         User user = getUserById(idUser);
         if(user.isAdmin()){
@@ -79,6 +88,24 @@ public class UserService {
     public List<UserVO> getAdminUsers(Boolean isAdmin){
         List<User> adminList = userRepository.findByIsAdmin(isAdmin);
         return adminList.stream().map(u ->userMapper.toUserVo(u)).collect(Collectors.toList());
+    }
+
+    //-----MESSAGES----//
+
+    public UserReview createReaview(UserReview userReview, Long idUser, Long idReceiver){
+        User sender = getUserById(idUser);
+        User receiver = getUserById(idReceiver);
+        userReview.setUserSender(sender);
+        userReview.setUserReceiver(receiver);
+        userReview.setAccepted(true);
+
+        userReview =  userReviewRepository.save(userReview);
+
+        receiver.addReview(userReview);
+
+        userRepository.save(receiver);
+
+        return userReview;
     }
 
 }

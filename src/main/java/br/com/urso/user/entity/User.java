@@ -72,7 +72,7 @@ public class User implements Serializable {
     private boolean isAdmin = false;
 
     @ApiModelProperty(value = "Lista de depoimentos do usuário")
-    @OneToMany(mappedBy = "userSender",cascade=CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "userReceiver",cascade=CascadeType.ALL, fetch = FetchType.LAZY)
     private List<UserReview> reviews = new ArrayList<>();
 
     @ApiModelProperty(value = "Lista de chats que o usuário participa")

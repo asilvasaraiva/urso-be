@@ -26,17 +26,20 @@ public class UserReview implements Serializable {
     @ManyToOne
     @ToString.Exclude
     @JoinColumn(name = "id_user_sender", nullable = false)
-    @JsonBackReference
+    @JsonBackReference(value = "userSender")
     private User userSender;
 
-    @Column(name = "id_person_receiver")
-    private long idPersonReceiver;
+    @ManyToOne
+    @ToString.Exclude
+    @JsonBackReference
+    @JoinColumn(name = "id_person_receiver", nullable = false)
+    private User userReceiver;
 
     @Column(name = "status")
     private boolean isAccepted = false;
 
     @Column(name = "create_at")
-    private LocalDateTime createdAt;
+    private LocalDateTime createdAt = LocalDateTime.now();
 
     @Column(name = "content")
     private String content;
