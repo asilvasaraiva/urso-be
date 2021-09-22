@@ -15,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -90,14 +91,13 @@ public class UserService {
         return adminList.stream().map(u ->userMapper.toUserVo(u)).collect(Collectors.toList());
     }
 
-    //-----MESSAGES----//
+    //-----REVIEW----//
 
     public UserReview createReaview(UserReview userReview, Long idUser, Long idReceiver){
         User sender = getUserById(idUser);
         User receiver = getUserById(idReceiver);
         userReview.setUserSender(sender);
         userReview.setUserReceiver(receiver);
-        userReview.setAccepted(true);
 
         userReview =  userReviewRepository.save(userReview);
 
@@ -106,6 +106,46 @@ public class UserService {
         userRepository.save(receiver);
 
         return userReview;
+    }
+
+    public List<UserReview> getReviews(Long idUser){
+        User user = getUserById(idUser);
+        return user.getReviews();
+    }
+
+    public List<UserReview> reviewsAcceptedOrReject(Long idUser, int isAccept){
+        User user = getUserById(idUser);
+        List<UserReview> listAccepted;
+        if(isAccept==1){
+            listAccepted = user.getReviews().stream().filter(u->u.isAccepted()).collect(Collectors.toList());
+            return listAccepted;
+        }else{
+            listAccepted = user.getReviews().stream().filter(u->!u.isAccepted()).collect(Collectors.toList());
+            return listAccepted;
+        }
+    }
+
+    public UserReview AcceptOrRejectReview(Long idUser, Long idReview, int isAccept){
+        User user = getUserById(idUser);
+
+        List<UserReview> reviewsToAccept = user.getReviews().stream().filter(ur-> !ur.isVisualized()).collect(Collectors.toList());
+        UserReview review = null;
+        for(UserReview ur : reviewsToAccept){
+            if(ur.getIdReview()==idReview){
+                review = ur;
+            }
+        }
+        if(review!=null && !review.isVisualized()){
+            if(isAccept==1){
+                review.setAccepted(true);
+            }else{
+                review.setAccepted(false);
+            }
+            review.setVisualized(true);
+            return userReviewRepository.save(review);
+        }
+        return null;
+
     }
 
 }

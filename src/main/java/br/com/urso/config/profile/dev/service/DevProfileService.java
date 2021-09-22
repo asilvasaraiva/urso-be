@@ -216,6 +216,7 @@ public class DevProfileService {
         return UserReview.builder()
                 .userSender(createUser())
                 .isAccepted(true)
+                .isVisualized(true)
                 .content("teste de depoimento")
                 .createdAt(dt.atTime(12,25))
                 .build();

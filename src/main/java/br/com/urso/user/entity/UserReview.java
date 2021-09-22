@@ -38,6 +38,9 @@ public class UserReview implements Serializable {
     @Column(name = "status")
     private boolean isAccepted = false;
 
+    @Column(name = "visualized")
+    private boolean isVisualized = false;
+
     @Column(name = "create_at")
     private LocalDateTime createdAt = LocalDateTime.now();
 
