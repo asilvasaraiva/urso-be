@@ -30,8 +30,11 @@ public class ChatComplain implements Serializable {
     @Column(name = "id_chat")
     private long idChat;
 
+    @Column(name = "visualized")
+    private boolean isVisualized = false;
+
     @Column(name = "dat_creation")
-    private LocalDateTime createAt;
+    private LocalDateTime createAt= LocalDateTime.now();
 
     @Column(name = "content")
     private String content;

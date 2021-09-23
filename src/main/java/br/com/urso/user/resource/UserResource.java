@@ -65,7 +65,8 @@ public class UserResource {
             @ApiResponse(code = 200, message = "Usuário atualizado com sucesso", response = UserVO.class, responseContainer = "Users"),
             @ApiResponse(code = 404, message = "Usuário não encontrado"),
             @ApiResponse(code = 500, message = "Erro interno") })
-    public ResponseEntity<UserVO> updateUser(@PathVariable("idUser") Long idUser,@RequestBody UserVO userVO) throws UserNotFoundException {
+    public ResponseEntity<UserVO> updateUser(@PathVariable("idUser") Long idUser,
+                                             @RequestBody UserVO userVO) throws UserNotFoundException {
         return ResponseEntity.ok(userService.update(idUser,userVO));
     }
 
@@ -107,7 +108,9 @@ public class UserResource {
             @ApiResponse(code = 200, message = "Depoimento criado com sucesso", response = UserReviewVO.class, responseContainer = "Users"),
             @ApiResponse(code = 404, message = "Usuário destinatário  não encontrado"),
             @ApiResponse(code = 500, message = "Erro interno") })
-    public ResponseEntity createReview(@Valid @RequestBody UserReview userReview,@PathVariable("idUser") Long idUser, @PathVariable("idReceiver") Long idReceiver) {
+    public ResponseEntity createReview(@Valid @RequestBody UserReview userReview,
+                                       @PathVariable("idUser") Long idUser,
+                                       @PathVariable("idReceiver") Long idReceiver) {
         return ResponseEntity.ok(userService.createReaview(userReview,idUser,idReceiver));
     }
     @GetMapping(value = "/{idUser}/reviews", produces={"application/json"})
@@ -127,7 +130,8 @@ public class UserResource {
             @ApiResponse(code = 200, message = "Lista filtrada retornada sucesso", response = UserReviewVO.class, responseContainer = "Users"),
             @ApiResponse(code = 404, message = "Usuário destinatário  não encontrado"),
             @ApiResponse(code = 500, message = "Erro interno") })
-    public ResponseEntity listOfReviewsToAccept(@PathVariable("idUser") Long idUser, @PathVariable("accepted") Integer accepted) {
+    public ResponseEntity listOfReviewsToAccept(@PathVariable("idUser") Long idUser,
+                                                @PathVariable("accepted") Integer accepted) {
         return ResponseEntity.ok(userService.reviewsAcceptedOrReject(idUser,accepted));
     }
 
@@ -137,7 +141,9 @@ public class UserResource {
             @ApiResponse(code = 200, message = "Depoimento aceito ou rejeitado com sucesso", response = HttpStatus.class, responseContainer = "Users"),
             @ApiResponse(code = 403, message = "Depoimento ja Aceito ou Rejeitado"),
             @ApiResponse(code = 500, message = "Erro interno") })
-    public ResponseEntity changeReviewStatus(@PathVariable("idUser") Long idUser, @PathVariable("idReview") Long idReview,@PathVariable("accepted") Integer accepted) {
+    public ResponseEntity changeReviewStatus(@PathVariable("idUser") Long idUser,
+                                             @PathVariable("idReview") Long idReview,
+                                             @PathVariable("accepted") Integer accepted) {
         return ResponseEntity.ok(userService.AcceptOrRejectReview(idUser,idReview,accepted));
     }
 
