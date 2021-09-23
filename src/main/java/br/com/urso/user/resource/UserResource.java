@@ -11,6 +11,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -131,10 +132,10 @@ public class UserResource {
     }
 
     @GetMapping(value = "/{idUser}/reviews/{idReview}/accept/{accepted}", produces={"application/json"})
-    @ApiOperation(value = "Aceita ou Rejeita um depoimento. Accepted = 1 aceita, qualquer outro rejeita ", response = ResponseEntity.class)
+    @ApiOperation(value = "Aceita ou Rejeita um depoimento. Accepted = 1 aceita, qualquer outro rejeita ", response = HttpStatus.class)
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Depoimento aceito ou rejeitado com sucesso", response = UserReviewVO.class, responseContainer = "Users"),
-            @ApiResponse(code = 404, message = "Usuário destinatário  não encontrado"),
+            @ApiResponse(code = 200, message = "Depoimento aceito ou rejeitado com sucesso", response = HttpStatus.class, responseContainer = "Users"),
+            @ApiResponse(code = 403, message = "Depoimento ja Aceito ou Rejeitado"),
             @ApiResponse(code = 500, message = "Erro interno") })
     public ResponseEntity changeReviewStatus(@PathVariable("idUser") Long idUser, @PathVariable("idReview") Long idReview,@PathVariable("accepted") Integer accepted) {
         return ResponseEntity.ok(userService.AcceptOrRejectReview(idUser,idReview,accepted));

@@ -124,7 +124,7 @@ public class UserService {
         }
     }
 
-    public UserReview AcceptOrRejectReview(Long idUser, Long idReview, int isAccept){
+    public HttpStatus AcceptOrRejectReview(Long idUser, Long idReview, int isAccept){
         User user = getUserById(idUser);
 
         List<UserReview> reviewsToAccept = user.getReviews().stream().filter(ur-> !ur.isVisualized()).collect(Collectors.toList());
@@ -141,9 +141,10 @@ public class UserService {
                 review.setAccepted(false);
             }
             review.setVisualized(true);
-            return userReviewRepository.save(review);
+             userReviewRepository.save(review);
+             return HttpStatus.CREATED;
         }
-        return null;
+        return HttpStatus.FORBIDDEN;
 
     }
 
