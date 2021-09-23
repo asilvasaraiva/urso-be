@@ -1,4 +1,4 @@
-package br.com.urso.user.entity;
+package br.com.urso.user.vo;
 
 
 import com.fasterxml.jackson.annotation.JsonInclude;

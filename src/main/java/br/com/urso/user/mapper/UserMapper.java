@@ -1,7 +1,7 @@
 package br.com.urso.user.mapper;
 
 import br.com.urso.user.entity.User;
-import br.com.urso.user.entity.UserVO;
+import br.com.urso.user.vo.UserVO;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")

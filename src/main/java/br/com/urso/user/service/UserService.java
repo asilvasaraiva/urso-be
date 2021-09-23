@@ -4,7 +4,7 @@ import br.com.urso.user.entity.User;
 import br.com.urso.user.entity.UserReview;
 import br.com.urso.user.exception.DataIntegrityException;
 import br.com.urso.user.exception.UserNotFoundException;
-import br.com.urso.user.entity.UserVO;
+import br.com.urso.user.vo.UserVO;
 import br.com.urso.user.mapper.UserMapper;
 import br.com.urso.user.repository.UserRepository;
 import br.com.urso.user.repository.UserReviewRepository;
@@ -15,7 +15,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;

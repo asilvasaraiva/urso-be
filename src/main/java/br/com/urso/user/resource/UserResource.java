@@ -1,10 +1,10 @@
 package br.com.urso.user.resource;
 
 import br.com.urso.user.entity.UserReview;
-import br.com.urso.user.exception.DataIntegrityException;
 import br.com.urso.user.exception.UserNotFoundException;
 import br.com.urso.user.entity.User;
-import br.com.urso.user.entity.UserVO;
+import br.com.urso.user.vo.UserReviewVO;
+import br.com.urso.user.vo.UserVO;
 import br.com.urso.user.service.UserService;
 
 import io.swagger.annotations.ApiOperation;
@@ -103,7 +103,7 @@ public class UserResource {
     @PostMapping(value = "/{idUser}/reviews/create2/{idReceiver}", produces={"application/json"})
     @ApiOperation(value = "Cria um depoimento para um outro  usuário", response = UserReview.class)
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Depoimento criado com sucesso", response = UserReview.class, responseContainer = "Users"),
+            @ApiResponse(code = 200, message = "Depoimento criado com sucesso", response = UserReviewVO.class, responseContainer = "Users"),
             @ApiResponse(code = 404, message = "Usuário destinatário  não encontrado"),
             @ApiResponse(code = 500, message = "Erro interno") })
     public ResponseEntity createReview(@Valid @RequestBody UserReview userReview,@PathVariable("idUser") Long idUser, @PathVariable("idReceiver") Long idReceiver) {
@@ -112,7 +112,7 @@ public class UserResource {
     @GetMapping(value = "/{idUser}/reviews", produces={"application/json"})
     @ApiOperation(value = "Retorna a lista completa de depoimentos, tanto os aceitos quanto os recusados", response = ResponseEntity.class)
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Lista retornada com sucesso", response = UserReview.class, responseContainer = "Users"),
+            @ApiResponse(code = 200, message = "Lista retornada com sucesso", response = UserReviewVO.class, responseContainer = "Users"),
             @ApiResponse(code = 404, message = "Usuário não possui depoimentos"),
             @ApiResponse(code = 500, message = "Erro interno") })
     public ResponseEntity listOfReviewsToAccept(@PathVariable("idUser") Long idUser) {
@@ -121,9 +121,9 @@ public class UserResource {
 
 
     @GetMapping(value = "/{idUser}/reviews/{accepted}", produces={"application/json"})
-    @ApiOperation(value = "Retorna a lista de depoimentos filtrada. O valor accepted quando 1 retorna lista dos depoimentos aceitos, qualquer outro a lista dos não aceitos", response = ResponseEntity.class)
+    @ApiOperation(value = "Retorna a lista de depoimentos filtrada. Accepted= 1 retorna lista dos depoimentos aceitos, qualquer outro a lista dos não aceitos", response = ResponseEntity.class)
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Lista filtrada retornada sucesso", response = UserReview.class, responseContainer = "Users"),
+            @ApiResponse(code = 200, message = "Lista filtrada retornada sucesso", response = UserReviewVO.class, responseContainer = "Users"),
             @ApiResponse(code = 404, message = "Usuário destinatário  não encontrado"),
             @ApiResponse(code = 500, message = "Erro interno") })
     public ResponseEntity listOfReviewsToAccept(@PathVariable("idUser") Long idUser, @PathVariable("accepted") Integer accepted) {
@@ -131,9 +131,9 @@ public class UserResource {
     }
 
     @GetMapping(value = "/{idUser}/reviews/{idReview}/accept/{accepted}", produces={"application/json"})
-    @ApiOperation(value = "Aceita ou Rejeita um depoimento. Accepted quando 1 aceita, qualquer outro rejeita ", response = ResponseEntity.class)
+    @ApiOperation(value = "Aceita ou Rejeita um depoimento. Accepted = 1 aceita, qualquer outro rejeita ", response = ResponseEntity.class)
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Depoimento aceito ou rejeitado com sucesso", response = UserReview.class, responseContainer = "Users"),
+            @ApiResponse(code = 200, message = "Depoimento aceito ou rejeitado com sucesso", response = UserReviewVO.class, responseContainer = "Users"),
             @ApiResponse(code = 404, message = "Usuário destinatário  não encontrado"),
             @ApiResponse(code = 500, message = "Erro interno") })
     public ResponseEntity changeReviewStatus(@PathVariable("idUser") Long idUser, @PathVariable("idReview") Long idReview,@PathVariable("accepted") Integer accepted) {
