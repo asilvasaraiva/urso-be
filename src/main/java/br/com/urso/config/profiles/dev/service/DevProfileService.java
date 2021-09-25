@@ -1,4 +1,4 @@
-package br.com.urso.config.profile.dev.service;
+package br.com.urso.config.profiles.dev.service;
 
 
 import br.com.urso.chat.entity.ChatMessage;
