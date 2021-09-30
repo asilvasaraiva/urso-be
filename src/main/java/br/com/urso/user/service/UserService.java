@@ -1,5 +1,6 @@
 package br.com.urso.user.service;
 
+import br.com.urso.chat.entity.Chat;
 import br.com.urso.user.entity.User;
 import br.com.urso.user.entity.UserReview;
 import br.com.urso.user.exception.DataIntegrityException;
@@ -14,6 +15,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -41,6 +43,7 @@ public class UserService {
         return  users.stream().map(u ->userMapper.toUserVo(u)).collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public User getUserById(Long id) throws UserNotFoundException {
         Optional<User> user = userRepository.findById(id);
         return user.orElseThrow(()-> new UserNotFoundException("User: "+id +" not found in database"));
@@ -148,4 +151,7 @@ public class UserService {
 
     }
 
+    public List<User> usersFromChat(Chat c){
+        return userRepository.findByUserChats(c);
+    }
 }

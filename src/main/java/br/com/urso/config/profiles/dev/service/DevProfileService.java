@@ -53,7 +53,7 @@ public class DevProfileService {
     public  void InstantiateDataBase(){
 
     // Generic Users
-        User user1 = createUser();
+        User user1 = createUser(new User());
         User user2 = createUser();
         User user3 = createUser();
 
@@ -200,16 +200,26 @@ public class DevProfileService {
 
     private User createUser(){
         return  User.builder()
-
                 .age(dt)
                 .email("teste@teste.com")
                 .joinDate(dt)
                 .name("Teste 1")
                 .surname("Lorem")
                 .password("asdqwe")
-                .userChats(new ArrayList<>())
+                .userChats(new ArrayList<Chat>())
                 .reviews(new ArrayList<UserReview>())
                 .build();
+    }
+
+    private User createUser(User u){
+        u.setAge(dt);
+        u.setEmail("teste@teste.com");
+        u.setJoinDate(dt);
+        u.setName("Teste 1");
+        u.setSurname("Lorem");
+        u.setPassword("asdqwe");
+        return u;
+
     }
 
     private UserReview createUserReview(){

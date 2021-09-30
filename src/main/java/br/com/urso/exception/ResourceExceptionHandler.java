@@ -1,6 +1,7 @@
 package br.com.urso.exception;
 
 
+import br.com.urso.chat.exception.ChatNotFoundException;
 import br.com.urso.user.exception.DataIntegrityException;
 import br.com.urso.user.exception.EmailAlreadyExistException;
 import br.com.urso.user.exception.UserNotFoundException;
@@ -16,11 +17,18 @@ import javax.servlet.http.HttpServletRequest;
 
 @ControllerAdvice
 public class ResourceExceptionHandler {
-	
+
 	@ExceptionHandler(UserNotFoundException.class)
 	public ResponseEntity<StandardError> objectNotFound(UserNotFoundException e, HttpServletRequest request){
 		StandardError err = new StandardError(System.currentTimeMillis(),HttpStatus.NOT_FOUND.value(),"Entity not Found", e.getMessage(), request.getRequestURI());
 		
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(err);
+	}
+
+	@ExceptionHandler(ChatNotFoundException.class)
+	public ResponseEntity<StandardError> chatNotFound(ChatNotFoundException e, HttpServletRequest request){
+		StandardError err = new StandardError(System.currentTimeMillis(),HttpStatus.NOT_FOUND.value(),"Chat not Found", e.getMessage(), request.getRequestURI());
+
 		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(err);
 	}
 

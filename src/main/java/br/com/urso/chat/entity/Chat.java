@@ -4,6 +4,8 @@ import br.com.urso.user.entity.User;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -26,11 +28,14 @@ public class Chat implements Serializable {
     @Column(name = "id_chat")
     private long idChat;
 
+    @Column(name = "chat_title")
+    private String chatTitle;
+
     @Column(name = "id_chat_owner")
     private long idChatOwner;
 
     @Column(name = "dat_creation")
-    private LocalDateTime createAt;
+    private LocalDateTime createAt = LocalDateTime.now();
 
     @JsonManagedReference
     @OneToMany(mappedBy = "chat")
@@ -38,7 +43,7 @@ public class Chat implements Serializable {
     private List<ChatMessage> messages= new ArrayList<>();
 
     @JsonBackReference
-    @ManyToMany(mappedBy = "userChats",fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "userChats")
     @ToString.Exclude
     private List<User> participants= new ArrayList<>();
 
@@ -53,7 +58,7 @@ public class Chat implements Serializable {
     }
 
     public boolean addParticipants(User user){
-        if(this.participants.size()<maxParticipants){
+        if(this.participants.size()<maxParticipants) {
             this.participants.add(user);
             return true;
         }else{

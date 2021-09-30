@@ -10,6 +10,9 @@ var connectingElement = document.querySelector('.connecting');
 
 var stompClient = null;
 var username = null;
+var idChat = null;
+var register = null;
+var privateMessage = null;
 
 var colors = [
     '#2196F3', '#32c787', '#00BCD4', '#ff5652',
@@ -27,7 +30,8 @@ console.log('Iniciando conexão');
         stompClient = Stomp.over(socket);
 
         console.log(socket);
-        stompClient.connect({}, onConnected, onError);
+
+        stompClient.connect({ username: username }, onConnected, onError);
     }
     event.preventDefault();
 }
@@ -35,15 +39,30 @@ console.log('Iniciando conexão');
 
 function onConnected() {
     // Subscribe to the Public Topic
-    stompClient.subscribe('/topic/public', onMessageReceived);
+
+   if(document.querySelector('#chatByID').value.trim()!=""){
+   idChat =document.querySelector('#chatByID').value.trim();
+   console.log("Se inscrevendo para o ","/user/queue/messages")
+      privateMessage = stompClient.subscribe( "/user/chats/queue/messages", onMessageReceived);
+       stompClient.send("/app/chats/chat.register",
+              {},
+              JSON.stringify({sender: username, chatID:idChat, type: 'CHAT'})
+          )
+
+      console.log('Enviou o conect');
+   }else{
+   console.log("Fazendo registro no sistema, sem ID CHAT");
+    register =  stompClient.subscribe('/user/chats/queue/messages', onMessageReceived);
+     stompClient.send("/app/chats/chat.register",
+            {},
+            JSON.stringify({sender: username,type: 'JOIN',chatID:0})
+        )
+
+    console.log('Enviou o conect');
+   }
 
     // Tell your username to the server
-    stompClient.send("/app/chats/chat.register",
-        {},
-        JSON.stringify({sender: username, type: 'JOIN'})
-    )
 
-console.log('Enviou o conect');
     connectingElement.classList.add('hidden');
 }
 
@@ -60,6 +79,7 @@ function send(event) {
     if(messageContent && stompClient) {
         var chatMessage = {
             sender: username,
+            chatID:idChat,
             content: messageInput.value,
             type: 'CHAT'
         };
@@ -74,6 +94,12 @@ function send(event) {
 function onMessageReceived(payload) {
     var message = JSON.parse(payload.body);
 
+    if(message.chatID!=null && idChat==null){
+    idChat = message.chatID
+    alert(idChat);
+//    register.unsubscribe();
+//    privateMessage = stompClient.subscribe( "/user/queue/messages", onMessageReceived);
+    }
     var messageElement = document.createElement('li');
 
     if(message.type === 'JOIN') {
