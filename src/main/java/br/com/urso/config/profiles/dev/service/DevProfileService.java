@@ -54,13 +54,15 @@ public class DevProfileService {
 
     // Generic Users
         User user1 = createUser(new User());
+        User user4 = createUser(new User());
         User user2 = createUser();
         User user3 = createUser();
 
+        user4.setName("usuário 4");
         user2.setName("User 2");
         user3.setName("User 3");
 
-        userRepository.saveAll(Arrays.asList(user1,user2,user3));
+        userRepository.saveAll(Arrays.asList(user1,user2,user3,user4));
 
 
         UserReview userReview1 = createUserReview();

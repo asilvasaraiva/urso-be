@@ -67,6 +67,7 @@ public class ChatService {
             Chat c = chatByID(chatStompRegistry.getChatID());
             List<User> us = userService.usersFromChat(c);
             us.add(user);
+            us.stream().forEach(u-> chatStompRegistry.getListOfParticipants().add(u.getIdUser()));
             c.setParticipants(us);
             chatRepository.save(c);
             user.addChat(c);
@@ -80,7 +81,9 @@ public class ChatService {
             user.addChat(c);
             userRepository.save(user);
             chatStompRegistry.setChatID(c.getIdChat());
+            chatStompRegistry.getListOfParticipants().add(user.getIdUser());
         }
+
         chatStompRegistry.setName(user.getName());
         return chatStompRegistry;
     }

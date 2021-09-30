@@ -13,6 +13,7 @@ var username = null;
 var idChat = null;
 var register = null;
 var privateMessage = null;
+var listOfParticipants = null;
 
 var colors = [
     '#2196F3', '#32c787', '#00BCD4', '#ff5652',
@@ -46,7 +47,7 @@ function onConnected() {
       privateMessage = stompClient.subscribe( "/user/chats/queue/messages", onMessageReceived);
        stompClient.send("/app/chats/chat.register",
               {},
-              JSON.stringify({sender: username, chatID:idChat, type: 'CHAT'})
+              JSON.stringify({sender: username, chatID:idChat, type: 'JOIN'})
           )
 
       console.log('Enviou o conect');
@@ -78,7 +79,7 @@ function send(event) {
 
     if(messageContent && stompClient) {
         var chatMessage = {
-            sender: username,
+            listOfParticipants: listOfParticipants,
             chatID:idChat,
             content: messageInput.value,
             type: 'CHAT'
@@ -94,8 +95,10 @@ function send(event) {
 function onMessageReceived(payload) {
     var message = JSON.parse(payload.body);
 
+console.log("MESSAGEM RECEBIDA: %s",JSON.stringify(message));
     if(message.chatID!=null && idChat==null){
-    idChat = message.chatID
+    idChat = message.chatID;
+    listOfParticipants = message.listOfParticipants;
     alert(idChat);
 //    register.unsubscribe();
 //    privateMessage = stompClient.subscribe( "/user/queue/messages", onMessageReceived);

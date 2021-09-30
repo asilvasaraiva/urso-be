@@ -1,9 +1,6 @@
 package br.com.urso.chat.resource;
 
-import br.com.urso.chat.entity.Chat;
-import br.com.urso.chat.entity.ChatComplain;
-import br.com.urso.chat.entity.ChatMessage;
-import br.com.urso.chat.entity.ChatStompRegistry;
+import br.com.urso.chat.entity.*;
 import br.com.urso.chat.service.ChatService;
 import br.com.urso.config.UserPrincipal;
 import br.com.urso.user.entity.User;
@@ -46,33 +43,41 @@ public class ChatResource {
 
 
     @MessageMapping("/chat.register")
-    public void create(@Payload ChatStompRegistry chatMessage,
+    public void create(@Payload ChatStompRegistry chatRegister,
                               SimpMessageHeaderAccessor headerAccessor, @Header("simpUser") UserPrincipal principal) {
         log.info("|--- CHAT.register---|");
         log.info("|--- ID.register principal---|"+principal.getName());
-        messagingTemplate.convertAndSendToUser(principal.getName(), "/queue/messages", chatService.register(chatMessage));
-
+        chatService.register(chatRegister);
+        if(chatRegister.getListOfParticipants().size()>1){
+            chatRegister.getListOfParticipants().forEach(p->messagingTemplate.convertAndSendToUser(p.toString(), "/queue/messages", chatRegister));
+        }else{
+            messagingTemplate.convertAndSendToUser(principal.getName(), "/queue/messages", chatRegister);
+        }
     }
 
 
     @MessageMapping("/chat.send")
 //    @SendToUser("/topic/public")
-    public void sendMessage(@Payload ChatStompRegistry chatMessage , @Header("simpUser") UserPrincipal principal) {
+    public void sendMessage(@Payload ChatStompMessage chatMessage , @Header("simpUser") UserPrincipal principal) {
         log.info("|--- CHAT.send ID ---|",chatMessage.getChatID());
         log.info("|--- CHAT.send PRINCIPAL ---|",principal.getName());
        //return chatService.saveMessage(chatMessage);
 
-    if(chatMessage.getChatID()>0){
-        Chat c = chatService.chatByID(chatMessage.getChatID());
-        List<User> us = userService.usersFromChat(c);
-        if(us.size()>0){
-            us.stream().forEach(user -> messagingTemplate.convertAndSendToUser(user.getName(), "/queue/messages", chatMessage));
+        if( chatMessage.getListOfParticipants()!=null){
+            chatMessage.getListOfParticipants().forEach(u->messagingTemplate.convertAndSendToUser(u, "/queue/messages", chatMessage));
+        }else{
+            messagingTemplate.convertAndSendToUser(principal.getName(),"queue/messages",chatMessage);
         }
-    }
+//    if(chatMessage.getChatID()>0){
+//        Chat c = chatService.chatByID(chatMessage.getChatID());
+//        List<User> us = userService.usersFromChat(c);
+//        if(us.size()>0){
+//            us.stream().forEach(user -> messagingTemplate.convertAndSendToUser(user.getName(), "/queue/messages", chatMessage));
+//        }
+//    }
 
 
 
-        messagingTemplate.convertAndSendToUser(principal.getName(),"queue/messages",chatMessage);
     }
 
 

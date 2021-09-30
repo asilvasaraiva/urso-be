@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -13,6 +15,7 @@ public class ChatStompRegistry {
     private Long sender;
     private long chatID;
     private int maxParticipants;
+    private ArrayList<Long> listOfParticipants= new ArrayList<>();
     private MessageType type;
 
     public enum MessageType {
