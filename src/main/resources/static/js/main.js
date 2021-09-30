@@ -96,12 +96,15 @@ function onMessageReceived(payload) {
     var message = JSON.parse(payload.body);
 
 console.log("MESSAGEM RECEBIDA: %s",JSON.stringify(message));
+
+if(message.listOfParticipants!=null){
+   listOfParticipants = message.listOfParticipants;
+   console.log("lista de Participantes: ",listOfParticipants);
+}
+
     if(message.chatID!=null && idChat==null){
     idChat = message.chatID;
-    listOfParticipants = message.listOfParticipants;
     alert(idChat);
-//    register.unsubscribe();
-//    privateMessage = stompClient.subscribe( "/user/queue/messages", onMessageReceived);
     }
     var messageElement = document.createElement('li');
 

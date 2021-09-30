@@ -57,27 +57,15 @@ public class ChatResource {
 
 
     @MessageMapping("/chat.send")
-//    @SendToUser("/topic/public")
     public void sendMessage(@Payload ChatStompMessage chatMessage , @Header("simpUser") UserPrincipal principal) {
         log.info("|--- CHAT.send ID ---|",chatMessage.getChatID());
         log.info("|--- CHAT.send PRINCIPAL ---|",principal.getName());
-       //return chatService.saveMessage(chatMessage);
 
         if( chatMessage.getListOfParticipants()!=null){
             chatMessage.getListOfParticipants().forEach(u->messagingTemplate.convertAndSendToUser(u, "/queue/messages", chatMessage));
         }else{
             messagingTemplate.convertAndSendToUser(principal.getName(),"queue/messages",chatMessage);
         }
-//    if(chatMessage.getChatID()>0){
-//        Chat c = chatService.chatByID(chatMessage.getChatID());
-//        List<User> us = userService.usersFromChat(c);
-//        if(us.size()>0){
-//            us.stream().forEach(user -> messagingTemplate.convertAndSendToUser(user.getName(), "/queue/messages", chatMessage));
-//        }
-//    }
-
-
-
     }
 
 
