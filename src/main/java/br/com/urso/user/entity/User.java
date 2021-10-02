@@ -3,10 +3,7 @@ package br.com.urso.user.entity;
 import br.com.urso.user.vo.UserVO;
 import br.com.urso.chat.entity.Chat;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -71,10 +68,12 @@ public class User implements Serializable {
 
     @ApiModelProperty(value = "Lista de depoimentos do usuário")
     @OneToMany(mappedBy = "userReceiver", fetch = FetchType.LAZY)
+    @ToString.Exclude
     private List<UserReview> reviews = new ArrayList<>();
 
     @ApiModelProperty(value = "Lista de chats que o usuário participa")
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY)
+    @ToString.Exclude
     @JoinTable(
             name = "user_chat",
             joinColumns= @JoinColumn(name = "user_id",referencedColumnName = "id_user"),

@@ -31,6 +31,9 @@ public class Chat implements Serializable {
     @Column(name = "chat_title")
     private String chatTitle;
 
+    @Column(name = "chat_description")
+    private String chatDescription;
+
     @Column(name = "id_chat_owner")
     private long idChatOwner;
 

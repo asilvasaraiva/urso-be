@@ -8,12 +8,28 @@ var messageInput = document.querySelector('#message');
 var messageArea = document.querySelector('#messageArea');
 var connectingElement = document.querySelector('.connecting');
 
+
 var stompClient = null;
+
 var username = null;
 var idChat = null;
-var register = null;
+// var register = null;
 var privateMessage = null;
 var listOfParticipants = null;
+var chatTitle=null;
+
+// private long idUser;
+//     private long chatID;
+//     private int maxParticipants;
+//     private Set<Long> listOfParticipants= new Set<>();
+
+// var ChatMessageRegistry={
+// idUser: username,
+// chatID:idChat,
+// chatTitle:chatTitle,
+// type: 'JOIN'
+// }
+
 
 var colors = [
     '#2196F3', '#32c787', '#00BCD4', '#ff5652',
@@ -32,6 +48,8 @@ console.log('Iniciando conexão');
 
         console.log(socket);
 
+        //username é o header que será utilizado no interceptor para atribuir o socket id do usuario, se mudar o nome
+        //tera que alterar o nome do header na classe CustomHandShakeInterceptor
         stompClient.connect({ username: username }, onConnected, onError);
     }
     event.preventDefault();
@@ -47,16 +65,24 @@ function onConnected() {
       privateMessage = stompClient.subscribe( "/user/chats/queue/messages", onMessageReceived);
        stompClient.send("/app/chats/chat.register",
               {},
-              JSON.stringify({sender: username, chatID:idChat, type: 'JOIN'})
+              JSON.stringify({idUser: username, chatID:idChat, type: 'JOIN'})
           )
 
       console.log('Enviou o conect');
    }else{
    console.log("Fazendo registro no sistema, sem ID CHAT");
-    register =  stompClient.subscribe('/user/chats/queue/messages', onMessageReceived);
+   let chatTitle=  document.querySelector('#chatTitle').value.trim();
+   let maxParticipants = document.querySelector('#maxPart').value.trim();
+
+    stompClient.subscribe('/user/chats/queue/messages', onMessageReceived);
      stompClient.send("/app/chats/chat.register",
             {},
-            JSON.stringify({sender: username,type: 'JOIN',chatID:0})
+            JSON.stringify({
+                idUser: username,
+                type: 'JOIN',
+                chatTitle:chatTitle,
+                maxParticipants:maxParticipants
+            })
         )
 
     console.log('Enviou o conect');
@@ -95,8 +121,6 @@ function send(event) {
 function onMessageReceived(payload) {
     var message = JSON.parse(payload.body);
 
-console.log("MESSAGEM RECEBIDA: %s",JSON.stringify(message));
-
 if(message.listOfParticipants!=null){
    listOfParticipants = message.listOfParticipants;
    console.log("lista de Participantes: ",listOfParticipants);
@@ -110,11 +134,15 @@ if(message.listOfParticipants!=null){
 
     if(message.type === 'JOIN') {
         messageElement.classList.add('event-message');
-        message.content = message.name + ' joined!';
+        message.content = message.nameUser + ' joined!';
     } else if (message.type === 'LEAVE') {
         messageElement.classList.add('event-message');
         message.content = message.idUserSender + ' left!';
-    } else {
+    } else if (message.type === 'FULL') {
+        alert("Sala Cheia");
+        usernamePage.classList.remove('hidden');
+        chatPage.classList.add('hidden');        
+    }else {
         messageElement.classList.add('chat-message');
 
         var avatarElement = document.createElement('i');

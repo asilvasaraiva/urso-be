@@ -11,15 +11,16 @@ import java.util.ArrayList;
 @NoArgsConstructor
 public class ChatStompMessage {
     private String content;
-    private String name;
-    private String sender;
-    private long chatID;
+    private String chatTitle;
+    private String idUser;
+    private String nameUser;
+    private String chatID;
     private int maxParticipants;
-    private ArrayList<String> listOfParticipants= new ArrayList<>();
+    private ArrayList<Long> listOfParticipants= new ArrayList<>();
     private MessageType type;
 
     public enum MessageType {
-        CHAT, LEAVE, JOIN
+        CHAT, LEAVE, JOIN, FULL
     }
 
 }

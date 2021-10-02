@@ -8,16 +8,18 @@ import br.com.urso.chat.repository.ChatRepository;
 import br.com.urso.user.entity.User;
 import br.com.urso.user.repository.UserRepository;
 import br.com.urso.user.service.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
+@Slf4j
 public class ChatService {
 
     private final ChatRepository chatRepository;
@@ -60,33 +62,37 @@ public class ChatService {
 
     //------CHAT CONFIGS-------//
 
-    public ChatStompRegistry register(ChatStompRegistry chatStompRegistry) {
-        User user = userService.getUserById(chatStompRegistry.getSender());
+@Transactional
+    public ChatStompMessage register(ChatStompMessage chatStompMessage) {
+        Long userId=Long.parseLong(chatStompMessage.getIdUser());
+        User user = userService.getUserById(userId);
 
-        if(chatStompRegistry.getChatID()>0){
-            Chat c = chatByID(chatStompRegistry.getChatID());
-            List<User> us = userService.usersFromChat(c);
-            us.add(user);
-            us.stream().forEach(u-> chatStompRegistry.getListOfParticipants().add(u.getIdUser()));
-            c.setParticipants(us);
-            chatRepository.save(c);
-            user.addChat(c);
-            userRepository.save(user);
-            chatStompRegistry.setChatID(chatStompRegistry.getChatID());
+        if(chatStompMessage.getChatID()!=null){
+            Long chatId=Long.parseLong(chatStompMessage.getChatID());
+            Chat c = chatByID(chatId);
+            if(c.addParticipants(user)){//testando sala cheia
+                c.getParticipants().stream().forEach(cp->chatStompMessage.getListOfParticipants().add(cp.getIdUser()));
+                user.addChat(c);
+                chatRepository.save(c);
+                chatStompMessage.setChatID(chatStompMessage.getChatID());
+            }else {
+                chatStompMessage.setType(ChatStompMessage.MessageType.FULL);
+                return chatStompMessage;
+            }
         }else{
             Chat c = new Chat();
             c.setMaxParticipants(3);
-            c.setParticipants(Arrays.asList(user));
-            chatRepository.save(c);
+            c.setIdChatOwner(userId);
+            c.addParticipants(user);
             user.addChat(c);
-            userRepository.save(user);
-            chatStompRegistry.setChatID(c.getIdChat());
-            chatStompRegistry.getListOfParticipants().add(user.getIdUser());
+            chatRepository.save(c);
+            chatStompMessage.setChatID(String.valueOf(c.getIdChat()));
+            chatStompMessage.getListOfParticipants().add(user.getIdUser());
         }
-
-        chatStompRegistry.setName(user.getName());
-        return chatStompRegistry;
+        chatStompMessage.setNameUser(user.getName());
+        return chatStompMessage;
     }
+
 
     public ChatStompMessage send(ChatStompMessage chatStompMessage){
 
@@ -94,18 +100,19 @@ public class ChatService {
     }
 
 
-    public ChatStompRegistry saveMessage(ChatStompRegistry chatStompRegistry) {
-        User u = userService.getUserById(chatStompRegistry.getSender());
+    public ChatStompMessage saveMessage(ChatStompMessage chatStompMessage) {
+        Long userId=Long.parseLong(chatStompMessage.getIdUser());
+        User u = userService.getUserById(userId);
 
         ChatMessage c = ChatMessage.builder()
-                .content(chatStompRegistry.getContent())
-                .idUserSender(chatStompRegistry.getSender())
+                .content(chatStompMessage.getContent())
+                .idUserSender(userId)
                 .chat(chatRepository.getById(1L))
                 .createAt(LocalDateTime.now()).build();
 
         chatMessageRepository.save(c);
-        chatStompRegistry.setName(u.getName());
-        return chatStompRegistry;
+        chatStompMessage.setChatTitle(u.getName());
+        return chatStompMessage;
     }
 
 

@@ -38,6 +38,7 @@ public class UserService {
 
     //---SECTION OF USER ----///
 
+    @Transactional
     public List<UserVO> listUsers(){
         List<User> users = userRepository.findAll();
         return  users.stream().map(u ->userMapper.toUserVo(u)).collect(Collectors.toList());
@@ -76,7 +77,7 @@ public class UserService {
 
 
     //-----ADMIN SECTION----//
-
+@Transactional
     public UserVO changeStatusAdmin(Long idUser){
         User user = getUserById(idUser);
         if(user.isAdmin()){
@@ -87,14 +88,14 @@ public class UserService {
         userRepository.save(user);
         return userMapper.toUserVo(user);
     }
-
+    @Transactional
     public List<UserVO> getAdminUsers(Boolean isAdmin){
         List<User> adminList = userRepository.findByIsAdmin(isAdmin);
         return adminList.stream().map(u ->userMapper.toUserVo(u)).collect(Collectors.toList());
     }
 
     //-----REVIEW----//
-
+    @Transactional
     public UserReview createReaview(UserReview userReview, Long idUser, Long idReceiver){
         User sender = getUserById(idUser);
         User receiver = getUserById(idReceiver);
@@ -110,11 +111,13 @@ public class UserService {
         return userReview;
     }
 
+    @Transactional
     public List<UserReview> getReviews(Long idUser){
         User user = getUserById(idUser);
         return user.getReviews();
     }
 
+    @Transactional
     public List<UserReview> reviewsAcceptedOrReject(Long idUser, int isAccept){
         User user = getUserById(idUser);
         List<UserReview> listAccepted;
@@ -127,6 +130,7 @@ public class UserService {
         }
     }
 
+    @Transactional
     public HttpStatus AcceptOrRejectReview(Long idUser, Long idReview, int isAccept){
         User user = getUserById(idUser);
 
@@ -151,6 +155,7 @@ public class UserService {
 
     }
 
+    @Transactional
     public List<User> usersFromChat(Chat c){
         return userRepository.findByUserChats(c);
     }

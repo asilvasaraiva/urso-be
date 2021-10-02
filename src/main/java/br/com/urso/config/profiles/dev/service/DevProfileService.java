@@ -16,6 +16,7 @@ import br.com.urso.user.repository.UserReviewRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -198,6 +199,11 @@ public class DevProfileService {
         for(User u : list){
             log.info(u.getName());
         }
+    }
+
+    @Transactional
+    private void addChatInUser(Chat c, User u){
+        u.addChat(c);
     }
 
     private User createUser(){

@@ -3,7 +3,6 @@ package br.com.urso.chat.resource;
 import br.com.urso.chat.entity.*;
 import br.com.urso.chat.service.ChatService;
 import br.com.urso.config.UserPrincipal;
-import br.com.urso.user.entity.User;
 import br.com.urso.user.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,8 +13,6 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 
 @RestController
@@ -43,16 +40,14 @@ public class ChatResource {
 
 
     @MessageMapping("/chat.register")
-    public void create(@Payload ChatStompRegistry chatRegister,
+    public void create(@Payload ChatStompMessage chatMessageRegister,
                               SimpMessageHeaderAccessor headerAccessor, @Header("simpUser") UserPrincipal principal) {
         log.info("|--- CHAT.register---|");
         log.info("|--- ID.register principal---|"+principal.getName());
-        chatService.register(chatRegister);
-        if(chatRegister.getListOfParticipants().size()>1){
-            chatRegister.getListOfParticipants().forEach(p->messagingTemplate.convertAndSendToUser(p.toString(), "/queue/messages", chatRegister));
-        }else{
-            messagingTemplate.convertAndSendToUser(principal.getName(), "/queue/messages", chatRegister);
-        }
+        chatService.register(chatMessageRegister);
+        chatMessageRegister.getListOfParticipants()
+                .forEach(p->messagingTemplate.convertAndSendToUser(p.toString(), "/queue/messages", chatMessageRegister));
+
     }
 
 
@@ -61,8 +56,8 @@ public class ChatResource {
         log.info("|--- CHAT.send ID ---|",chatMessage.getChatID());
         log.info("|--- CHAT.send PRINCIPAL ---|",principal.getName());
 
-        if( chatMessage.getListOfParticipants()!=null){
-            chatMessage.getListOfParticipants().forEach(u->messagingTemplate.convertAndSendToUser(u, "/queue/messages", chatMessage));
+        if( chatMessage.getListOfParticipants().size()>1){
+            chatMessage.getListOfParticipants().forEach(u->messagingTemplate.convertAndSendToUser(u.toString(), "/queue/messages", chatMessage));
         }else{
             messagingTemplate.convertAndSendToUser(principal.getName(),"queue/messages",chatMessage);
         }
