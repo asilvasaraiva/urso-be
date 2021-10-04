@@ -45,8 +45,7 @@ public class ChatResource {
         log.info("|--- CHAT.register---|");
         log.info("|--- ID.register principal---|"+principal.getName());
         chatService.register(chatMessageRegister);
-        chatMessageRegister.getListOfParticipants()
-                .forEach(p->messagingTemplate.convertAndSendToUser(p.toString(), "/queue/messages", chatMessageRegister));
+     messagingTemplate.convertAndSendToUser(principal.getName(), "/queue/messages", chatMessageRegister);
 
     }
 
@@ -57,19 +56,13 @@ public class ChatResource {
         log.info("|--- CHAT.send PRINCIPAL ---|",principal.getName());
 
         if( chatMessage.getListOfParticipants().size()>1){
-            chatMessage.getListOfParticipants().forEach(u->messagingTemplate.convertAndSendToUser(u.toString(), "/queue/messages", chatMessage));
+            chatMessage.getListOfParticipants().forEach(u->messagingTemplate.convertAndSendToUser(u.toString(), "/queue/messages/"+chatMessage.getChatID(), chatMessage));
         }else{
-            messagingTemplate.convertAndSendToUser(principal.getName(),"queue/messages",chatMessage);
+            messagingTemplate.convertAndSendToUser(principal.getName(),"queue/messages/"+chatMessage.getChatID(),chatMessage);
         }
     }
 
-
-    public void createChat(){}
     public void findChatById(){}
-
-
-
-
 
     @PostMapping("/complains/from/{idUser}/tochat/{idChat}")
     public ResponseEntity chatComplain(@PathVariable("idUser")Long idUser,
@@ -77,8 +70,5 @@ public class ChatResource {
                                        @RequestBody ChatComplain c){
         return ResponseEntity.ok(chatService.createComplain(c,idUser,idChat));
     }
-
-    public void sendMessageChat(){}
-    public void findMessage(){}
 
 }

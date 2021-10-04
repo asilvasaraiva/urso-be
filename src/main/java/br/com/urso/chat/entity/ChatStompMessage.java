@@ -20,7 +20,7 @@ public class ChatStompMessage {
     private MessageType type;
 
     public enum MessageType {
-        CHAT, LEAVE, JOIN, FULL
+        CHAT, LEAVE, JOIN, FULL, ALREADY_IN
     }
 
 }

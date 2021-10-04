@@ -13,10 +13,11 @@ var stompClient = null;
 
 var username = null;
 var idChat = null;
-// var register = null;
+var register; // salva o subscribe para receber a mensagem de volta, e após isso faz o unsubscribe para não receber se o mesmo usuário entrar em outra sala
 var privateMessage = null;
 var listOfParticipants = null;
 var chatTitle=null;
+var conectou = false;
 
 // private long idUser;
 //     private long chatID;
@@ -58,23 +59,23 @@ console.log('Iniciando conexão');
 
 function onConnected() {
     // Subscribe to the Public Topic
-
    if(document.querySelector('#chatByID').value.trim()!=""){
    idChat =document.querySelector('#chatByID').value.trim();
    console.log("Se inscrevendo para o ","/user/queue/messages")
-      privateMessage = stompClient.subscribe( "/user/chats/queue/messages", onMessageReceived);
+      stompClient.subscribe( "/user/chats/queue/messages/"+idChat, onMessageReceived);//escutando para receber mensagems do chat
+      stompClient.subscribe( "/user/chats/queue/messages", onMessageReceived);//escutando para receber que entrou no chat
        stompClient.send("/app/chats/chat.register",
               {},
               JSON.stringify({idUser: username, chatID:idChat, type: 'JOIN'})
           )
 
-      console.log('Enviou o conect');
+      console.log('Enviou o conect por id chat');
    }else{
    console.log("Fazendo registro no sistema, sem ID CHAT");
    let chatTitle=  document.querySelector('#chatTitle').value.trim();
    let maxParticipants = document.querySelector('#maxPart').value.trim();
 
-    stompClient.subscribe('/user/chats/queue/messages', onMessageReceived);
+    
      stompClient.send("/app/chats/chat.register",
             {},
             JSON.stringify({
@@ -85,7 +86,9 @@ function onConnected() {
             })
         )
 
-    console.log('Enviou o conect');
+     stompClient.subscribe('/user/chats/queue/messages', onMessageReceived);
+
+    console.log('Enviou o conect para criar sala');
    }
 
     // Tell your username to the server
@@ -102,7 +105,7 @@ function onError(error) {
 
 function send(event) {
     var messageContent = messageInput.value.trim();
-
+    
     if(messageContent && stompClient) {
         var chatMessage = {
             listOfParticipants: listOfParticipants,
@@ -129,17 +132,32 @@ if(message.listOfParticipants!=null){
     if(message.chatID!=null && idChat==null){
     idChat = message.chatID;
     alert(idChat);
+
     }
     var messageElement = document.createElement('li');
 
-    if(message.type === 'JOIN') {
+    if(message.type === 'JOIN') {    
+        //let titulo = message.chatTitle;
+        // if(titulo!=null){
+        //     document.getElementById("#chatTitle").innerHTML = titulo;
+        //   }
         messageElement.classList.add('event-message');
         message.content = message.nameUser + ' joined!';
+        stompClient.unsubscribe('/user/chats/queue/messages/'+username, {});
+        //register.unsubscribe(username);
+  
+        //stompClient.unsubscribe( "/user/chats/queue/messages/"+username,{});//retirando boas vindas caso entre em outro chat
+
+        
     } else if (message.type === 'LEAVE') {
         messageElement.classList.add('event-message');
         message.content = message.idUserSender + ' left!';
     } else if (message.type === 'FULL') {
         alert("Sala Cheia");
+        usernamePage.classList.remove('hidden');
+        chatPage.classList.add('hidden');        
+    } else if (message.type === 'ALREADY_IN' && message.listOfParticipants==null) {
+        alert("Já incluso na sala, favor escolher outra");
         usernamePage.classList.remove('hidden');
         chatPage.classList.add('hidden');        
     }else {

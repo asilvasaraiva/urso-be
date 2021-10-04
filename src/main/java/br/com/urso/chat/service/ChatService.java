@@ -70,6 +70,11 @@ public class ChatService {
         if(chatStompMessage.getChatID()!=null){
             Long chatId=Long.parseLong(chatStompMessage.getChatID());
             Chat c = chatByID(chatId);
+            if(c.getParticipants().contains(user)){
+                chatStompMessage.setType(ChatStompMessage.MessageType.ALREADY_IN);
+                chatStompMessage.setListOfParticipants(null);
+                return chatStompMessage;
+            }
             if(c.addParticipants(user)){//testando sala cheia
                 c.getParticipants().stream().forEach(cp->chatStompMessage.getListOfParticipants().add(cp.getIdUser()));
                 user.addChat(c);
@@ -77,11 +82,13 @@ public class ChatService {
                 chatStompMessage.setChatID(chatStompMessage.getChatID());
             }else {
                 chatStompMessage.setType(ChatStompMessage.MessageType.FULL);
+                chatStompMessage.setListOfParticipants(null);
                 return chatStompMessage;
             }
         }else{
             Chat c = new Chat();
-            c.setMaxParticipants(3);
+            c.setMaxParticipants(chatStompMessage.getMaxParticipants());
+            c.setChatTitle(chatStompMessage.getChatTitle());
             c.setIdChatOwner(userId);
             c.addParticipants(user);
             user.addChat(c);
