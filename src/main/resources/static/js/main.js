@@ -75,7 +75,7 @@ function onConnected() {
    console.log("Fazendo registro no sistema, sem ID CHAT");
    let chatTitle=  document.querySelector('#chatTitle').value.trim();
    let maxParticipants = document.querySelector('#maxPart').value.trim();
-
+   let chatDescription = document.querySelector('#chatDescription').value.trim();
     
      stompClient.send("/app/chats/chat.register",
             {},
@@ -83,7 +83,8 @@ function onConnected() {
                 idUser: username,
                 type: 'JOIN',
                 chatTitle:chatTitle,
-                maxParticipants:maxParticipants
+                maxParticipants:maxParticipants,
+                chatDescription
             })
         )
 
@@ -112,6 +113,7 @@ function send(event) {
         var chatMessage = {
             listOfParticipants: listOfParticipants,
             chatID:idChat,
+            idUser:username,
             content: messageInput.value,
             type: 'CHAT'
         };

@@ -14,9 +14,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -90,6 +92,8 @@ public class ChatService {
             c.setMaxParticipants(chatStompMessage.getMaxParticipants());
             c.setChatTitle(chatStompMessage.getChatTitle());
             c.setIdChatOwner(userId);
+            c.setChatDescription(chatStompMessage.getChatDescription());
+            c.setChatActive(true);
             c.addParticipants(user);
             user.addChat(c);
             chatRepository.save(c);
@@ -101,24 +105,22 @@ public class ChatService {
     }
 
 
-    public ChatStompMessage send(ChatStompMessage chatStompMessage){
-
-        return chatStompMessage;
-    }
-
-
+    @Transactional
     public ChatStompMessage saveMessage(ChatStompMessage chatStompMessage) {
         Long userId=Long.parseLong(chatStompMessage.getIdUser());
+        Long chatId=Long.parseLong(chatStompMessage.getChatID());
+
+        Chat chat = chatByID(chatId);
         User u = userService.getUserById(userId);
 
-        ChatMessage c = ChatMessage.builder()
-                .content(chatStompMessage.getContent())
-                .idUserSender(userId)
-                .chat(chatRepository.getById(1L))
-                .createAt(LocalDateTime.now()).build();
+        ArrayList<Long> listaParticipantes = (ArrayList<Long>) chat.getParticipants().stream().map(p->p.getIdUser()).collect(Collectors.toList());
+        chatStompMessage.setListOfParticipants(listaParticipantes);
+        ChatMessage c = new ChatMessage();
+        c.setChat(chat);
+        c.setIdUserSender(u.getIdUser());
+        c.setContent(chatStompMessage.getContent());
 
         chatMessageRepository.save(c);
-        chatStompMessage.setChatTitle(u.getName());
         return chatStompMessage;
     }
 

@@ -13,6 +13,7 @@ public class ChatStompMessage {
     private String content;
     private String chatTitle;
     private String idUser;
+    private String chatDescription;
     private String nameUser;
     private String chatID;
     private int maxParticipants;

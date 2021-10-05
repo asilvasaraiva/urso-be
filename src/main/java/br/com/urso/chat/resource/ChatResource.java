@@ -58,7 +58,9 @@ public class ChatResource {
     public void sendMessage(@Payload ChatStompMessage chatMessage , @Header("simpUser") UserPrincipal principal) {
         log.info("|--- CHAT.send ID ---|"+chatMessage.getChatID());
         log.info("|--- CHAT.send PRINCIPAL ---|"+principal.getName());
-        chatMessage.getListOfParticipants().forEach(u->messagingTemplate.convertAndSendToUser(u.toString(), "/queue/messages/"+chatMessage.getChatID(), chatService.send(chatMessage)));
+        chatService.saveMessage(chatMessage);
+        chatMessage.getListOfParticipants()
+                .forEach(u->messagingTemplate.convertAndSendToUser(u.toString(), "/queue/messages/"+chatMessage.getChatID(), chatMessage));
     }
 
 
