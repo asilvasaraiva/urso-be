@@ -11,7 +11,10 @@ import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
+import org.springframework.messaging.simp.SimpMessageType;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.messaging.simp.annotation.SendToUser;
+import org.springframework.messaging.simp.annotation.SubscribeMapping;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -40,27 +43,24 @@ public class ChatResource {
 
 
     @MessageMapping("/chat.register")
+//    @SendToUser(value = "/queue/messages",broadcast=false)
     public void create(@Payload ChatStompMessage chatMessageRegister,
                               SimpMessageHeaderAccessor headerAccessor, @Header("simpUser") UserPrincipal principal) {
         log.info("|--- CHAT.register---|");
-        log.info("|--- ID.register principal---|"+principal.getName());
+        log.info("|--- ID.register [principal]---|"+principal.getName());
         chatService.register(chatMessageRegister);
      messagingTemplate.convertAndSendToUser(principal.getName(), "/queue/messages", chatMessageRegister);
 
     }
 
-
     @MessageMapping("/chat.send")
+//    @ResponseBody
     public void sendMessage(@Payload ChatStompMessage chatMessage , @Header("simpUser") UserPrincipal principal) {
-        log.info("|--- CHAT.send ID ---|",chatMessage.getChatID());
-        log.info("|--- CHAT.send PRINCIPAL ---|",principal.getName());
-
-        if( chatMessage.getListOfParticipants().size()>1){
-            chatMessage.getListOfParticipants().forEach(u->messagingTemplate.convertAndSendToUser(u.toString(), "/queue/messages/"+chatMessage.getChatID(), chatMessage));
-        }else{
-            messagingTemplate.convertAndSendToUser(principal.getName(),"queue/messages/"+chatMessage.getChatID(),chatMessage);
-        }
+        log.info("|--- CHAT.send ID ---|"+chatMessage.getChatID());
+        log.info("|--- CHAT.send PRINCIPAL ---|"+principal.getName());
+        chatMessage.getListOfParticipants().forEach(u->messagingTemplate.convertAndSendToUser(u.toString(), "/queue/messages/"+chatMessage.getChatID(), chatService.send(chatMessage)));
     }
+
 
     public void findChatById(){}
 

@@ -62,9 +62,10 @@ function onConnected() {
    if(document.querySelector('#chatByID').value.trim()!=""){
    idChat =document.querySelector('#chatByID').value.trim();
    console.log("Se inscrevendo para o ","/user/queue/messages")
-      stompClient.subscribe( "/user/chats/queue/messages/"+idChat, onMessageReceived);//escutando para receber mensagems do chat
+    stompClient.subscribe( "/user/chats/queue/messages/"+idChat, onMessageReceived);//escutando para receber mensagems do chat
       stompClient.subscribe( "/user/chats/queue/messages", onMessageReceived);//escutando para receber que entrou no chat
-       stompClient.send("/app/chats/chat.register",
+       
+      stompClient.send("/app/chats/chat.register",
               {},
               JSON.stringify({idUser: username, chatID:idChat, type: 'JOIN'})
           )
@@ -87,6 +88,7 @@ function onConnected() {
         )
 
      stompClient.subscribe('/user/chats/queue/messages', onMessageReceived);
+     //stompClient.subscribe( "/user/chats/queue/messages/"+idChat, onMessageReceived);
 
     console.log('Enviou o conect para criar sala');
    }
@@ -131,19 +133,17 @@ if(message.listOfParticipants!=null){
 
     if(message.chatID!=null && idChat==null){
     idChat = message.chatID;
+    stompClient.subscribe("/user/chats/queue/messages/"+idChat,onMessageReceived);
+  // stompClient.unsubscribe('/user/chats/queue/messages');
     alert(idChat);
 
     }
     var messageElement = document.createElement('li');
 
-    if(message.type === 'JOIN') {    
-        //let titulo = message.chatTitle;
-        // if(titulo!=null){
-        //     document.getElementById("#chatTitle").innerHTML = titulo;
-        //   }
+    if(message.type === 'JOIN') {            
         messageElement.classList.add('event-message');
         message.content = message.nameUser + ' joined!';
-        stompClient.unsubscribe('/user/chats/queue/messages/'+username, {});
+      
         //register.unsubscribe(username);
   
         //stompClient.unsubscribe( "/user/chats/queue/messages/"+username,{});//retirando boas vindas caso entre em outro chat

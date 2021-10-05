@@ -32,7 +32,7 @@ public class ChatMessage implements Serializable {
     private Chat chat;
 
     @Column(name = "dat_creation")
-    private LocalDateTime createAt;
+    private LocalDateTime createAt = LocalDateTime.now();
 
     @Column(name = "content")
     private String content;
