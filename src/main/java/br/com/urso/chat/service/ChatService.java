@@ -69,25 +69,6 @@ public class ChatService {
         Long userId=Long.parseLong(chatStompMessage.getIdUser());
         User user = userService.getUserById(userId);
 
-        if(chatStompMessage.getChatID()!=null){
-            Long chatId=Long.parseLong(chatStompMessage.getChatID());
-            Chat c = chatByID(chatId);
-            if(c.getParticipants().contains(user)){
-                chatStompMessage.setType(ChatStompMessage.MessageType.ALREADY_IN);
-                chatStompMessage.setListOfParticipants(null);
-                return chatStompMessage;
-            }
-            if(c.addParticipants(user)){//testando sala cheia
-                c.getParticipants().stream().forEach(cp->chatStompMessage.getListOfParticipants().add(cp.getIdUser()));
-                user.addChat(c);
-                chatRepository.save(c);
-                chatStompMessage.setChatID(chatStompMessage.getChatID());
-            }else {
-                chatStompMessage.setType(ChatStompMessage.MessageType.FULL);
-                chatStompMessage.setListOfParticipants(null);
-                return chatStompMessage;
-            }
-        }else{
             Chat c = new Chat();
             c.setMaxParticipants(chatStompMessage.getMaxParticipants());
             c.setChatTitle(chatStompMessage.getChatTitle());
@@ -99,11 +80,36 @@ public class ChatService {
             chatRepository.save(c);
             chatStompMessage.setChatID(String.valueOf(c.getIdChat()));
             chatStompMessage.getListOfParticipants().add(user.getIdUser());
-        }
+
         chatStompMessage.setNameUser(user.getName());
         return chatStompMessage;
     }
 
+    @Transactional
+    public ChatStompMessage joinChat(ChatStompMessage chatStompMessage) {
+        Long userId=Long.parseLong(chatStompMessage.getIdUser());
+        User user = userService.getUserById(userId);
+
+        if(chatStompMessage.getChatID()!=null){
+            Long chatId=Long.parseLong(chatStompMessage.getChatID());
+            Chat c = chatByID(chatId);
+            if(c.getParticipants().contains(user)){
+                chatStompMessage.setType(ChatStompMessage.MessageType.ALREADY_IN);
+                chatStompMessage.setListOfParticipants(null);
+                return chatStompMessage;
+            }else if(c.addParticipants(user)){//testando sala cheia VALIDAÇÃO INCOMPLETA, POIS MOSTRA MENSAGEM NOS CHATS QUE O USUÁRIO ESTÁ
+                c.getParticipants().stream().forEach(cp->chatStompMessage.getListOfParticipants().add(cp.getIdUser()));
+                user.addChat(c);
+                chatRepository.save(c);
+                chatStompMessage.setChatID(chatStompMessage.getChatID());
+            }else {
+                chatStompMessage.setType(ChatStompMessage.MessageType.FULL);
+                chatStompMessage.setListOfParticipants(null);
+            }
+        }
+        chatStompMessage.setNameUser(user.getName());
+        return chatStompMessage;
+    }
 
     @Transactional
     public ChatStompMessage saveMessage(ChatStompMessage chatStompMessage) {

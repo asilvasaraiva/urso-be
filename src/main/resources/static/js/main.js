@@ -65,7 +65,7 @@ function onConnected() {
     stompClient.subscribe( "/user/chats/queue/messages/"+idChat, onMessageReceived);//escutando para receber mensagems do chat
       stompClient.subscribe( "/user/chats/queue/messages", onMessageReceived);//escutando para receber que entrou no chat
        
-      stompClient.send("/app/chats/chat.register",
+      stompClient.send("/app/chats/chat.join",
               {},
               JSON.stringify({idUser: username, chatID:idChat, type: 'JOIN'})
           )
@@ -158,7 +158,7 @@ if(message.listOfParticipants!=null){
         alert("Sala Cheia");
         usernamePage.classList.remove('hidden');
         chatPage.classList.add('hidden');        
-    } else if (message.type === 'ALREADY_IN' && message.listOfParticipants==null) {
+    } else if (message.type === 'ALREADY_IN') {
         alert("Já incluso na sala, favor escolher outra");
         usernamePage.classList.remove('hidden');
         chatPage.classList.add('hidden');        

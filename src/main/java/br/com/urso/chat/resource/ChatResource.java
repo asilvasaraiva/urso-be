@@ -43,14 +43,15 @@ public class ChatResource {
 
 
     @MessageMapping("/chat.register")
-//    @SendToUser(value = "/queue/messages",broadcast=false)
-    public void create(@Payload ChatStompMessage chatMessageRegister,
-                              SimpMessageHeaderAccessor headerAccessor, @Header("simpUser") UserPrincipal principal) {
-        log.info("|--- CHAT.register---|");
-        log.info("|--- ID.register [principal]---|"+principal.getName());
+    public void create(@Payload ChatStompMessage chatMessageRegister,@Header("simpUser") UserPrincipal principal) {
         chatService.register(chatMessageRegister);
-     messagingTemplate.convertAndSendToUser(principal.getName(), "/queue/messages", chatMessageRegister);
+        messagingTemplate.convertAndSendToUser(principal.getName(), "/queue/messages", chatMessageRegister);
+    }
 
+    @MessageMapping("/chat.join")
+    public void joinChat(@Payload ChatStompMessage chatMessageRegister,@Header("simpUser") UserPrincipal principal) {
+        chatService.joinChat(chatMessageRegister);
+        messagingTemplate.convertAndSendToUser(principal.getName(), "/queue/messages", chatMessageRegister);
     }
 
     @MessageMapping("/chat.send")
