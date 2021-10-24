@@ -81,26 +81,6 @@ public class UserResource {
     }
 
 
-    @GetMapping(value = "/{idUser}/admin", produces="application/json")
-    @ApiOperation(value = "Altera o status de adminstrador", response = ResponseEntity.class)
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Status do usuário alterado com sucesso", response = UserVO.class, responseContainer = "Users"),
-            @ApiResponse(code = 404, message = "Usuário não encontrado"),
-            @ApiResponse(code = 500, message = "Erro interno") })
-    public ResponseEntity changeToAdmin (@PathVariable("idUser") Long idUser) throws UserNotFoundException {
-        return ResponseEntity.ok(userService.changeStatusAdmin(idUser));
-    }
-
-    @GetMapping(value = "/admins", produces="application/json")
-    @ApiOperation(value = "Retorna lista de Administradores", response = ResponseEntity.class)
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Status do usuário alterado com sucesso", response = UserVO.class, responseContainer = "Users"),
-            @ApiResponse(code = 404, message = "Usuário não encontrado"),
-            @ApiResponse(code = 500, message = "Erro interno") })
-    public ResponseEntity getListOfAdminsByStatus () throws UserNotFoundException {
-        return ResponseEntity.ok(userService.getAdminUsers(true));
-    }
-
 
     @PostMapping(value = "/{idUser}/reviews/create2/{idReceiver}", produces={"application/json"})
     @ApiOperation(value = "Cria um depoimento para um outro  usuário", response = UserReview.class)

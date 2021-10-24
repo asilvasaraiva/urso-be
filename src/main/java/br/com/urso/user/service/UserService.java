@@ -76,23 +76,7 @@ public class UserService {
     }
 
 
-    //-----ADMIN SECTION----//
-@Transactional
-    public UserVO changeStatusAdmin(Long idUser){
-        User user = getUserById(idUser);
-        if(user.isAdmin()){
-            user.setAdmin(false);
-        }else{
-            user.setAdmin(true);
-        }
-        userRepository.save(user);
-        return userMapper.toUserVo(user);
-    }
-    @Transactional
-    public List<UserVO> getAdminUsers(Boolean isAdmin){
-        List<User> adminList = userRepository.findByIsAdmin(isAdmin);
-        return adminList.stream().map(u ->userMapper.toUserVo(u)).collect(Collectors.toList());
-    }
+
 
     //-----REVIEW----//
     @Transactional

@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 
 
@@ -166,9 +167,23 @@ public class DevProfileService {
     //Admin Messages
         AdminMessage adminMessage = AdminMessage.builder().content("huehueheuheu").idUserSender(user1.getIdUser())
                 .isRead(true)
+                .typeOf("sugestion")
+                .title("Colocar mais Adms")
+                .createAt(LocalDateTime.now())
                 .build();
+        //adminRepository.save(adminMessage);
 
-        adminRepository.save(adminMessage);
+        AdminMessage adminMessage2 = new AdminMessage();
+        adminMessage2.setContent("Reclamação sobre 92929222j2j29j");
+        adminMessage2.setIdUserSender(user2.getIdUser());
+        adminMessage2.setRead(false);
+        adminMessage2.setTypeOf("complain");
+        adminMessage2.setTitle("Reclamação sobre palavras impróprias");
+        adminMessage2.setCreateAt(LocalDateTime.now());
+
+
+        adminRepository.saveAll(Arrays.asList(adminMessage, adminMessage2));
+        //adminRepository.save(adminMessage2);
 
 
     //Queries in Repositories Uncomment below

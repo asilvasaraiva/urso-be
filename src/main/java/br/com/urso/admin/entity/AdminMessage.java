@@ -5,10 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
@@ -22,6 +19,8 @@ public class AdminMessage implements Serializable {
     private static final long serialVersionUID = 5456822156544118281L;
 
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "adm_msg")
+    @SequenceGenerator(name = "adm_msg", sequenceName = "adm_msg_id", allocationSize = 1)
     @Column(name = "id_message")
     private long idMessage;
 
@@ -32,10 +31,16 @@ public class AdminMessage implements Serializable {
     private boolean isRead = false;
 
     @Column(name = "dat_creation")
-    private LocalDateTime createAt;
+    private LocalDateTime createAt = LocalDateTime.now();
 
     @Column(name = "content")
     private String content;
+
+    @Column(name = "type_of")
+    private String typeOf;
+
+    @Column(name = "title")
+    private String title;
 
 
 }
