@@ -15,6 +15,7 @@ import br.com.urso.user.repository.UserRepository;
 import br.com.urso.user.repository.UserReviewRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -45,6 +46,8 @@ public class DevProfileService {
     @Autowired
     private AdminRepository adminRepository;
 
+    @Autowired
+    PasswordEncoder encoder;
 
 
 
@@ -59,6 +62,12 @@ public class DevProfileService {
         User user4 = createUser(new User());
         User user2 = createUser();
         User user3 = createUser();
+
+        user1.setPassword(encoder.encode("1234"));
+        user1.setEmail("meuteste@a.com");
+        user2.setEmail("admin@a.com");
+        user2.setAdmin(true);
+        user2.setPassword(encoder.encode("1234"));
 
         user4.setName("usuário 4");
         user2.setName("User 2");
