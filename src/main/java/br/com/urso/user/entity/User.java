@@ -54,9 +54,9 @@ public class User implements Serializable {
     private  String password;
 
     @ApiModelProperty(value = "Data de nascimento do usuário")
-    @Column(name = "age")
+    @Column(name = "birth")
     @NotNull(message = "Idade não pode ser vazio")
-    private  LocalDate age;
+    private  LocalDate birth;
 
     @ApiModelProperty(value = "Data de entrada do usuário no sistema")
     @Column(name = "join_date")
@@ -105,7 +105,7 @@ public User merge(UserVO newUser ){
     }
 
     if(newUser.getAge()!=null){
-        this.setAge(LocalDate.parse( newUser.getAge()));
+        this.setBirth(LocalDate.parse( newUser.getAge()));
     }
 
     if(newUser.getEmail()!=null){

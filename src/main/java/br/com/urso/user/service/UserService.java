@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,6 +29,9 @@ public class UserService {
     private final UserRepository userRepository;
     private final UserReviewRepository userReviewRepository;
     private final UserMapper userMapper;
+
+    @Autowired
+    private PasswordEncoder encoder;
 
     @Autowired
     public UserService(UserRepository userRepository, UserReviewRepository userReviewRepository, UserMapper userMapper) {
@@ -50,9 +54,19 @@ public class UserService {
         return user.orElseThrow(()-> new UserNotFoundException("User: "+id +" not found in database"));
     }
 
+    @Transactional(readOnly = true)
+    public User getUserByEmail(String email) throws UserNotFoundException {
+        Optional<User> user = userRepository.findByEmail(email);
+        return user.orElseThrow(()-> new UserNotFoundException("User: "+email +" not found in database"));
+    }
+
+
     public ResponseEntity createUser(User user ) {
-        if(userRepository.findByEmail(user.getEmail())==null){
-            return ResponseEntity.ok().body(userRepository.save(user));
+
+        if(!userRepository.findByEmail(user.getEmail()).isPresent()){
+            String encodedPassword = encoder.encode(user.getPassword());
+            user.setPassword(encodedPassword);
+            return ResponseEntity.ok().body(userMapper.toUserVo(userRepository.save(user)));
         }else {
             return ResponseEntity.badRequest().body(HttpStatus.FORBIDDEN);
         }

@@ -4,6 +4,7 @@ import br.com.urso.security.payload.request.LoginRequest;
 import br.com.urso.security.payload.response.JwtResponse;
 import br.com.urso.security.service.AuthService;
 import br.com.urso.user.entity.User;
+import br.com.urso.user.vo.UserVO;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -28,5 +29,20 @@ public class AuthResource {
     public ResponseEntity<JwtResponse> login(@Valid @RequestBody LoginRequest loginRequest){
         return ResponseEntity.ok(authService.login(loginRequest));
     }
+
+    @PostMapping(value = "/create", consumes={"application/json"})
+    @ApiOperation(value = "Cria um novo usuário", response = ResponseEntity.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Usuário criado com sucesso", response = UserVO.class, responseContainer = "Users"),
+            @ApiResponse(code = 403, message = "Usuário já cadastrado"),
+            @ApiResponse(code = 500, message = "Erro interno") })
+    public ResponseEntity create(@Valid @RequestBody User user) {
+        return ResponseEntity.ok(authService.createUser(user));
+    }
+
+    //reset de senha
+    //sign up
+    //logout
+    //oauth2
 
 }

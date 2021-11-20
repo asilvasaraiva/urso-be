@@ -232,7 +232,7 @@ public class DevProfileService {
 
     private User createUser(){
         return  User.builder()
-                .age(dt)
+                .birth(dt)
                 .email("teste@teste.com")
                 .joinDate(dt)
                 .name("Teste 1")
@@ -244,7 +244,7 @@ public class DevProfileService {
     }
 
     private User createUser(User u){
-        u.setAge(dt);
+        u.setBirth(dt);
         u.setEmail("teste@teste.com");
         u.setJoinDate(dt);
         u.setName("Teste 1");

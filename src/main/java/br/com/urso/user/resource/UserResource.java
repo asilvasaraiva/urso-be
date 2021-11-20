@@ -49,16 +49,6 @@ public class UserResource {
         return ResponseEntity.ok(userService.getUserById(idUser));
     }
 
-    @PostMapping(value = "/create", consumes={"application/json"})
-    @ApiOperation(value = "Cria um novo usuário", response = ResponseEntity.class)
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Usuário criado com sucesso", response = UserVO.class, responseContainer = "Users"),
-            @ApiResponse(code = 403, message = "Usuário já cadastrado"),
-            @ApiResponse(code = 500, message = "Erro interno") })
-    public ResponseEntity create(@Valid @RequestBody User user) {
-        return ResponseEntity.ok(userService.createUser(user));
-    }
-
     @PutMapping("/{idUser}/edit")
     @ApiOperation(value = "Atualiza um usuário específico por ID", response = ResponseEntity.class)
     @ApiResponses(value = {
