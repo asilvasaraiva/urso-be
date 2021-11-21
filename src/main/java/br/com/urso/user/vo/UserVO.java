@@ -26,7 +26,7 @@ public class UserVO {
 
     private String email;
 
-    private String age;
+    private String birth;
 
     private String joinDate;
 

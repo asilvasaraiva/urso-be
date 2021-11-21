@@ -45,8 +45,8 @@ public class UserResource {
             @ApiResponse(code = 200, message = "Usuário retornado com sucesso", response = UserVO.class, responseContainer = "Users"),
             @ApiResponse(code = 404, message = "Usuário não encontrado"),
             @ApiResponse(code = 500, message = "Erro interno") })
-    public ResponseEntity<User> userById(@PathVariable("idUser") Long idUser) throws UserNotFoundException {
-        return ResponseEntity.ok(userService.getUserById(idUser));
+    public ResponseEntity<UserVO> userById(@PathVariable("idUser") Long idUser) throws UserNotFoundException {
+        return ResponseEntity.ok(userService.getUserVOById(idUser));
     }
 
     @PutMapping("/{idUser}/edit")

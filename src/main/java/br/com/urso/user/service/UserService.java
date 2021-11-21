@@ -54,6 +54,11 @@ public class UserService {
         return user.orElseThrow(()-> new UserNotFoundException("User: "+id +" not found in database"));
     }
 
+    public UserVO getUserVOById(Long id) throws UserNotFoundException {
+        var user = getUserById(id);
+        return userMapper.toUserVo(user);
+    }
+
     @Transactional(readOnly = true)
     public User getUserByEmail(String email) throws UserNotFoundException {
         Optional<User> user = userRepository.findByEmail(email);

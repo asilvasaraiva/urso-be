@@ -104,8 +104,8 @@ public User merge(UserVO newUser ){
         this.setSurname(newUser.getSurname());
     }
 
-    if(newUser.getAge()!=null){
-        this.setBirth(LocalDate.parse( newUser.getAge()));
+    if(newUser.getBirth()!=null){
+        this.setBirth(LocalDate.parse( newUser.getBirth()));
     }
 
     if(newUser.getEmail()!=null){

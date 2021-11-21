@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.Month;
 import java.util.*;
 
 
@@ -51,7 +52,7 @@ public class DevProfileService {
 
 
 
-    private final  LocalDate dt = LocalDate.of(2010,10,10);
+    private final  LocalDate dt = LocalDate.of(2010, Month.OCTOBER,10);
 
 
 
@@ -65,7 +66,7 @@ public class DevProfileService {
 
         user1.setPassword(encoder.encode("1234"));
         user1.setEmail("meuteste@a.com");
-        user2.setEmail("admin@a.com");
+        user2.setEmail("admin@1");
         user2.setAdmin(true);
         user2.setPassword(encoder.encode("1234"));
 
