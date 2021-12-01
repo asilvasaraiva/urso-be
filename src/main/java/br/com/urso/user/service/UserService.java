@@ -94,7 +94,13 @@ public class UserService {
         }
     }
 
-
+    @Transactional
+    public ResponseEntity resetPassword(Long id, User passw){
+        var user = getUserById(id);
+        user.setPassword(encoder.encode(passw.getPassword()));
+        userRepository.save(user);
+        return ResponseEntity.ok(200);
+    }
 
 
     //-----REVIEW----//

@@ -42,7 +42,6 @@ public class AuthResource {
 
     //reset de senha
     //sign up
-    //logout
     //oauth2
 
 }

@@ -70,7 +70,15 @@ public class UserResource {
         return ResponseEntity.ok(userService.deleteUser(idUser));
     }
 
-
+    @PutMapping(value = "/{idUser}/resetpassword", produces={"application/json"})
+    @ApiOperation(value = "Cria um depoimento para um outro  usuário", response = UserReview.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Troca a senha do usuário", response = UserReviewVO.class, responseContainer = "Users"),
+            @ApiResponse(code = 404, message = "Usuário informado  não encontrado"),
+            @ApiResponse(code = 500, message = "Erro interno") })
+    public ResponseEntity resetPassword( @RequestBody User newPassword,@PathVariable("idUser") Long idUser) {
+        return ResponseEntity.ok(userService.resetPassword(idUser,newPassword));
+    }
 
     @PostMapping(value = "/{idUser}/reviews/create2/{idReceiver}", produces={"application/json"})
     @ApiOperation(value = "Cria um depoimento para um outro  usuário", response = UserReview.class)
@@ -83,6 +91,7 @@ public class UserResource {
                                        @PathVariable("idReceiver") Long idReceiver) {
         return ResponseEntity.ok(userService.createReaview(userReview,idUser,idReceiver));
     }
+
     @GetMapping(value = "/{idUser}/reviews", produces={"application/json"})
     @ApiOperation(value = "Retorna a lista completa de depoimentos, tanto os aceitos quanto os recusados", response = ResponseEntity.class)
     @ApiResponses(value = {
