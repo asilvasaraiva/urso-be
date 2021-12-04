@@ -70,13 +70,13 @@ public class UserResource {
         return ResponseEntity.ok(userService.deleteUser(idUser));
     }
 
-    @PutMapping(value = "/{idUser}/resetpassword", produces={"application/json"})
-    @ApiOperation(value = "Cria um depoimento para um outro  usuário", response = UserReview.class)
+    @PutMapping(value = "/{idUser}/newpassword", produces={"application/json"})
+    @ApiOperation(value = "Altera a senha do usuário logado", response = UserReview.class)
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Troca a senha do usuário", response = UserReviewVO.class, responseContainer = "Users"),
+            @ApiResponse(code = 200, message = "Troca a senha do usuário", response = UserVO.class, responseContainer = "Users"),
             @ApiResponse(code = 404, message = "Usuário informado  não encontrado"),
             @ApiResponse(code = 500, message = "Erro interno") })
-    public ResponseEntity resetPassword( @RequestBody User newPassword,@PathVariable("idUser") Long idUser) {
+    public ResponseEntity changePassword( @RequestBody User newPassword,@PathVariable("idUser") Long idUser) {
         return ResponseEntity.ok(userService.resetPassword(idUser,newPassword));
     }
 
