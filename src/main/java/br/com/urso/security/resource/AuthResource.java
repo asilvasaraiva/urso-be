@@ -40,6 +40,12 @@ public class AuthResource {
         return ResponseEntity.ok(authService.createUser(user));
     }
 
+    @PostMapping(value = "/resetpassword",consumes={"application/json"})
+    public ResponseEntity resetPassword(@RequestBody User user){
+
+        return ResponseEntity.ok(authService.resetPassword(user.getEmail()));
+    }
+
     //reset de senha
     //sign up
     //oauth2

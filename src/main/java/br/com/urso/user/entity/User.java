@@ -67,12 +67,12 @@ public class User implements Serializable {
     private boolean isAdmin = false;
 
     @ApiModelProperty(value = "Lista de depoimentos do usuário")
-    @OneToMany(mappedBy = "userReceiver", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "userReceiver", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @ToString.Exclude
     private List<UserReview> reviews = new ArrayList<>();
 
     @ApiModelProperty(value = "Lista de chats que o usuário participa")
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @ToString.Exclude
     @JoinTable(
             name = "user_chat",

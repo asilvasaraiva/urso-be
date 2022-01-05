@@ -61,4 +61,8 @@ public class AuthService {
     public ResponseEntity createUser(User user) {
         return userService.createUser(user);
     }
+
+    public  ResponseEntity resetPassword(String email){
+        return userService.resetPassword(email);
+    }
 }

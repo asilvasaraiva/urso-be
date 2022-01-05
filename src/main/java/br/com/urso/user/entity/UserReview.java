@@ -23,17 +23,13 @@ public class UserReview implements Serializable {
     @Column(name = "id_review")
     private long idReview;
 
-    @ManyToOne
-    @ToString.Exclude
-    @JoinColumn(name = "id_user_sender", nullable = false)
-    @JsonBackReference(value = "userSender")
-    private User userSender;
 
-    @ManyToOne
-    @ToString.Exclude
-    @JsonBackReference
-    @JoinColumn(name = "id_person_receiver", nullable = false)
-    private User userReceiver;
+    @Column(name = "userSender")
+    private Long userSender;
+
+
+    @Column(name = "id_person_receiver")
+    private Long userReceiver;
 
     @Column(name = "status")
     private boolean isAccepted = false;

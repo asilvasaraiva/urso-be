@@ -1,6 +1,9 @@
 package br.com.urso.user.service;
 
 import br.com.urso.chat.entity.Chat;
+import br.com.urso.chat.entity.ChatMessage;
+import br.com.urso.chat.repository.ChatMessageRepository;
+import br.com.urso.chat.repository.ChatRepository;
 import br.com.urso.user.entity.User;
 import br.com.urso.user.entity.UserReview;
 import br.com.urso.user.exception.DataIntegrityException;
@@ -18,8 +21,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -28,16 +30,20 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final UserReviewRepository userReviewRepository;
+    private final ChatMessageRepository chatMessageRepository;
     private final UserMapper userMapper;
+    private final ChatRepository chatRepository;
 
     @Autowired
     private PasswordEncoder encoder;
 
     @Autowired
-    public UserService(UserRepository userRepository, UserReviewRepository userReviewRepository, UserMapper userMapper) {
+    public UserService(UserRepository userRepository, UserReviewRepository userReviewRepository, ChatMessageRepository chatMessageRepository, UserMapper userMapper, ChatRepository chatRepository) {
         this.userRepository = userRepository;
         this.userReviewRepository = userReviewRepository;
+        this.chatMessageRepository = chatMessageRepository;
         this.userMapper = userMapper;
+        this.chatRepository = chatRepository;
     }
 
     //---SECTION OF USER ----///
@@ -85,9 +91,17 @@ public class UserService {
     }
 
     public ResponseEntity deleteUser(Long id){
-        getUserById(id);
+        User u = getUserById(id);
         try {
-            userRepository.deleteById(id);
+            if(!u.getUserChats().isEmpty()){
+                List<Chat> salas = chatRepository.findByParticipants(u);
+                salas.forEach(uc-> {
+                    uc.getParticipants().remove(u);
+                    chatRepository.save(uc);
+                });
+            }
+            u.setUserChats(null);
+            userRepository.delete(u);
             return ResponseEntity.ok(HttpStatus.NO_CONTENT);
         }catch(DataIntegrityViolationException e){
             throw new DataIntegrityException("Não foi possível excluir, pois o usuário não existe");
@@ -102,14 +116,26 @@ public class UserService {
         return ResponseEntity.ok(200);
     }
 
+    @Transactional
+    public ResponseEntity resetPassword( String email){
+        Random rand = new Random();
+        var user = getUserByEmail(email);
+        String randomPass = String.valueOf(rand.nextInt(1000)*137);
+        user.setPassword(encoder.encode(randomPass));
+        log.info("Senha aleatoria gerada: {}",randomPass);
+        //TODO ENVIAR SENHA PARA O EMAIL
+        userRepository.save(user);
+        return ResponseEntity.ok(randomPass);
+    }
+
 
     //-----REVIEW----//
     @Transactional
     public UserReview createReaview(UserReview userReview, Long idUser, Long idReceiver){
         User sender = getUserById(idUser);
         User receiver = getUserById(idReceiver);
-        userReview.setUserSender(sender);
-        userReview.setUserReceiver(receiver);
+        userReview.setUserSender(idUser);
+        userReview.setUserReceiver(idReceiver);
 
         userReview =  userReviewRepository.save(userReview);
 

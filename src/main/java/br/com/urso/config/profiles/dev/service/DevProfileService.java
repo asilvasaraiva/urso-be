@@ -81,14 +81,14 @@ public class DevProfileService {
         UserReview userReview2 = createUserReview();
         UserReview userReview3 = createUserReview();
 
-        userReview1.setUserSender(user1);
-        userReview1.setUserReceiver(user2);
+        userReview1.setUserSender(user1.getIdUser());
+        userReview1.setUserReceiver(user2.getIdUser());
 
-        userReview2.setUserSender(user2);
-        userReview2.setUserReceiver(user1);
+        userReview2.setUserSender(user2.getIdUser());
+        userReview2.setUserReceiver(user1.getIdUser());
 
-        userReview3.setUserSender(user3);
-        userReview3.setUserReceiver(user2);
+        userReview3.setUserSender(user3.getIdUser());
+        userReview3.setUserReceiver(user2.getIdUser());
         userReviewRepository.saveAll(Arrays.asList(userReview1,userReview2,userReview3));
 
 
@@ -257,7 +257,7 @@ public class DevProfileService {
 
     private UserReview createUserReview(){
         return UserReview.builder()
-                .userSender(createUser())
+                .userSender(1L)
                 .isAccepted(true)
                 .isVisualized(true)
                 .content("teste de depoimento")

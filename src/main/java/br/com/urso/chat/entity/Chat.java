@@ -41,7 +41,7 @@ public class Chat implements Serializable {
     private LocalDateTime createAt = LocalDateTime.now();
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "chat")
+    @OneToMany(mappedBy = "chat",cascade = CascadeType.ALL)
     @ToString.Exclude
     private List<ChatMessage> messages= new ArrayList<>();
 
