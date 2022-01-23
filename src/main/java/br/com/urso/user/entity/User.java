@@ -1,7 +1,9 @@
 package br.com.urso.user.entity;
 
+import br.com.urso.security.oauth2.entity.AuthProvider;
 import br.com.urso.user.vo.UserVO;
 import br.com.urso.chat.entity.Chat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 
@@ -51,6 +53,7 @@ public class User implements Serializable {
     @ApiModelProperty(value = "Senha do usuário")
     @Column(name = "password")
     @NotEmpty(message = "Senha não pode ser vazia")
+    @JsonIgnore
     private  String password;
 
     @ApiModelProperty(value = "Data de nascimento do usuário")
@@ -70,6 +73,14 @@ public class User implements Serializable {
     @OneToMany(mappedBy = "userReceiver", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @ToString.Exclude
     private List<UserReview> reviews = new ArrayList<>();
+
+    @ApiModelProperty(value = "Tipo de Autenticação utilizada")
+
+    @Enumerated(EnumType.STRING)
+    private AuthProvider provider;
+
+    @ApiModelProperty(value = "Id do oauth")
+    private String providerId;
 
     @ApiModelProperty(value = "Lista de chats que o usuário participa")
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)

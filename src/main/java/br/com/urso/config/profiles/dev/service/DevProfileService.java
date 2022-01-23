@@ -2,6 +2,7 @@ package br.com.urso.config.profiles.dev.service;
 
 
 import br.com.urso.chat.entity.ChatMessage;
+import br.com.urso.security.oauth2.entity.AuthProvider;
 import br.com.urso.user.entity.UserReview;
 import br.com.urso.admin.entity.AdminMessage;
 import br.com.urso.admin.repository.AdminRepository;
@@ -251,6 +252,7 @@ public class DevProfileService {
         u.setName("Teste 1");
         u.setSurname("Lorem");
         u.setPassword("asdqwe");
+        u.setProvider(AuthProvider.local);
         return u;
 
     }
