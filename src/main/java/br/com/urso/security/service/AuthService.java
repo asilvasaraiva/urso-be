@@ -71,7 +71,12 @@ public class AuthService {
 
     public JwtResponse loginOauth2(Oauth2Request request) {
         try {
-            userService.getUserByEmail(request.getUsername());
+            var u = userService.getUserByEmail(request.getUsername());
+            request.setPassword(request.getIdProvider());
+            if(!encoder.matches(request.getPassword(),u.getPassword())){
+                u.setPassword(encoder.encode(request.getIdProvider()));
+                userRepository.save(u);
+            }
             return login(userToLoginRequest(request));
         } catch (UserNotFoundException e) {
             var u = createUserOauth(request);
@@ -89,16 +94,13 @@ public class AuthService {
     }
 
     private User createUserOauth(Oauth2Request request) {
-        User user = new User();
-        Random rand = new Random();
-
+        var user = new User();
         user.setProvider(request.getProvider());
         user.setProviderId(request.getIdProvider());
         user.setName(request.getName());
         user.setSurname(request.getSurname());
-        String randomPass = String.valueOf(rand.nextInt(1000) * 137);
-        request.setPassword(randomPass);
-        user.setPassword(encoder.encode(randomPass));
+        request.setPassword(request.getIdProvider());
+        user.setPassword(encoder.encode(request.getIdProvider()));
         user.setEmail(request.getUsername());
         user.setBirth(LocalDate.now());
 
