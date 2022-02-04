@@ -35,17 +35,17 @@ public class User implements Serializable {
     private  long idUser;
 
     @ApiModelProperty(value = "Nome do usuário")
-    @Column(name = "user_name")
+    @Column(name = "first_name")
     @NotEmpty(message = "Nome não pode ser vazio")
     private  String name;
 
     @ApiModelProperty(value = "Sobrenome do usuário")
-    @Column(name = "user_surname")
+    @Column(name = "surname")
     @NotEmpty(message = "Sobrenome não pode ser vazio")
     private  String surname;
 
-    @ApiModelProperty(value = "Email do usuário")
-    @Column(name = "user_email")
+    @ApiModelProperty(value = "Email e login do usuário")
+    @Column(name = "user_login")
     @NotEmpty(message = "Email não pode ser vazio")
     @Email(message = "Email deve ser válido")
     private  String email;
@@ -53,7 +53,6 @@ public class User implements Serializable {
     @ApiModelProperty(value = "Senha do usuário")
     @Column(name = "password")
     @NotEmpty(message = "Senha não pode ser vazia")
-    @JsonIgnore
     private  String password;
 
     @ApiModelProperty(value = "Data de nascimento do usuário")
@@ -75,7 +74,6 @@ public class User implements Serializable {
     private List<UserReview> reviews = new ArrayList<>();
 
     @ApiModelProperty(value = "Tipo de Autenticação utilizada")
-
     @Enumerated(EnumType.STRING)
     private AuthProvider provider;
 

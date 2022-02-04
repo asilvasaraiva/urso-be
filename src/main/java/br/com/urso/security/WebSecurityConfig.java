@@ -2,8 +2,6 @@ package br.com.urso.security;
 
 import br.com.urso.security.jwt.AuthEntryPointJwt;
 import br.com.urso.security.jwt.AuthTokenFilter;
-import br.com.urso.security.oauth2.CustomOAuth2UserService;
-import br.com.urso.security.oauth2.OAuth2AuthenticationSuccessHandler;
 import br.com.urso.security.userdetails.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -20,9 +18,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import java.util.Arrays;
 
@@ -32,12 +27,6 @@ import java.util.Arrays;
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     UserDetailsServiceImpl userDetailsService;
-
-    @Autowired
-    private CustomOAuth2UserService customOAuth2UserService;
-
-    @Autowired
-    private OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
 
     @Autowired
     private AuthEntryPointJwt unauthorizedHandler;
@@ -94,21 +83,21 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests()
+                .antMatchers("/api/admin/**").hasAnyAuthority("ROLE_ADMIN")
                 .antMatchers("/auth/**", "/oauth2/**").permitAll()
-                .antMatchers("/api/**").permitAll()
                 .anyRequest().authenticated()
-                .and()
-                .oauth2Login()
-                .authorizationEndpoint()
-                .baseUri("/oauth2/authorize")
-                .and()
-                .redirectionEndpoint()
-//                .baseUri("/oauth2/callback/**")
-                .and()
-                .userInfoEndpoint()
-                .userService(customOAuth2UserService)
-                .and()
-                .successHandler(oAuth2AuthenticationSuccessHandler)
+//                .and()
+//                .oauth2Login()
+//                .authorizationEndpoint()
+//                .baseUri("/oauth2/authorize")
+//                .and()
+//                .redirectionEndpoint()
+//                .baseUri("/oauth2/callback/*")
+//                .and()
+//                .userInfoEndpoint()
+//                .userService(customOAuth2UserService)
+//                .and()
+//                .successHandler(oAuth2AuthenticationSuccessHandler)
 //                .failureHandler(oAuth2AuthenticationFailureHandler);
         ;
 

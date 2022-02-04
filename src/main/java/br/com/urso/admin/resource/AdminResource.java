@@ -22,6 +22,7 @@ public class AdminResource {
         this.adminService = adminService;
     }
 
+
     @GetMapping(value = "/list", produces="application/json")
     @ApiOperation(value = "Retorna lista de Administradores", response = ResponseEntity.class)
     @ApiResponses(value = {
