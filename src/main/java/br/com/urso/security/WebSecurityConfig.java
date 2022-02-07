@@ -73,7 +73,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(WebSecurity web) {
         web.ignoring().antMatchers("/v2/api-docs", "/swagger-resources/**", "/swagger-ui/**",
-                "/swagger-ui/index.html**", "/webjars/**", "/actuator/health", "/h2-console/**");
+                "/swagger-ui/index.html**", "/webjars/**", "/actuator/**", "/h2-console/**");
     }
 
     @Override
@@ -85,21 +85,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/api/admin/**").hasAnyAuthority("ROLE_ADMIN")
                 .antMatchers("/auth/**", "/oauth2/**").permitAll()
-                .anyRequest().authenticated()
-//                .and()
-//                .oauth2Login()
-//                .authorizationEndpoint()
-//                .baseUri("/oauth2/authorize")
-//                .and()
-//                .redirectionEndpoint()
-//                .baseUri("/oauth2/callback/*")
-//                .and()
-//                .userInfoEndpoint()
-//                .userService(customOAuth2UserService)
-//                .and()
-//                .successHandler(oAuth2AuthenticationSuccessHandler)
-//                .failureHandler(oAuth2AuthenticationFailureHandler);
-        ;
+                .anyRequest().authenticated();
 
         http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
     }

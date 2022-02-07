@@ -20,6 +20,12 @@ public class AuthResource {
     @Autowired
     private AuthService authService;
 
+    @GetMapping(value = "/teste")
+    public String testeContainer(){
+        return "Teste de resposta via containner";
+    }
+
+
     @PostMapping(value = "/login", produces="application/json")
     @ApiOperation(value = "Login do usuario mediante email e senha", response = ResponseEntity.class)
     @ApiResponses(value = {

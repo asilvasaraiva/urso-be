@@ -30,6 +30,7 @@ public class UserResource {
         this.userService = userService;
     }
 
+
     @GetMapping(value = "/", produces="application/json")
     @ApiOperation(value = "Recupera a lista completa de usuários", response = ResponseEntity.class)
     @ApiResponses(value = {
