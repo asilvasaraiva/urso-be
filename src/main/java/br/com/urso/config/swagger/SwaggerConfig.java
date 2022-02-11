@@ -10,6 +10,7 @@ import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
+@EnableSwagger2
 @Configuration
 public class SwaggerConfig {
     @Bean
@@ -25,7 +26,7 @@ public class SwaggerConfig {
         return new ApiInfoBuilder()
                 .title("Rest API UrSo")
                 .description("Paths da aplicação")
-                .version("1.0.0")
+                .version("1.0")
                 .license("Pessoal")
                 .build();
     }
