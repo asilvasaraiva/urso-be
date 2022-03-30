@@ -45,7 +45,7 @@ public class User implements Serializable {
     private  String surname;
 
     @ApiModelProperty(value = "Email e login do usuário")
-    @Column(name = "user_login")
+    @Column(name = "user_login", unique=true)
     @NotEmpty(message = "Email não pode ser vazio")
     @Email(message = "Email deve ser válido")
     private  String email;

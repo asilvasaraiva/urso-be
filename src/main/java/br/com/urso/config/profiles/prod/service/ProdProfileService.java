@@ -49,7 +49,8 @@ public class ProdProfileService {
         u.setName("Admin 1");
         u.setSurname("Original");
         u.setAdmin(true);
-        u.setPassword(encoder.encode("@1234"));
+//        u.setPassword(encoder.encode("1234"));
+        u.setPassword("!1@2#3$4");
         u.setProvider(AuthProvider.local);
         return u;
 

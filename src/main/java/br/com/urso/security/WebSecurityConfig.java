@@ -71,13 +71,18 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Override
-    public void configure(WebSecurity web) {
-        web.ignoring().antMatchers("/v2/api-docs", "/swagger-resources/**", "/swagger-ui/**",
-                "/swagger-ui/index.html**"
-                , "/webjars/**", "/actuator/**"
-                , "/h2-console/**", "/index.html",
-                "/index.html/**", "/css/main.css","/js/main.js","/maxresdefault.jpg/**", "/web/**");
+    public void configure(WebSecurity web)  {
+        web.ignoring().antMatchers("/v2/api-docs", "/swagger-resources/**", "/swagger-ui/**", "/swagger-ui/index.html**", "/webjars/**", "/actuator/health");
     }
+
+//    @Override
+//    public void configure(WebSecurity web) {
+//        web.ignoring().antMatchers("/v2/api-docs", "/swagger-resources/**", "/configuration/**",
+//                "/swagger-ui/index.html**"
+//                , "/webjars/**", "/actuator/**"
+//                , "/h2-console/**", "/index.html",
+//                "/index.html/**", "/css/main.css","/js/main.js","/maxresdefault.jpg/**", "/web/**");
+//    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
