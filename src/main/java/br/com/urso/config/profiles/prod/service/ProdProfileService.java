@@ -14,12 +14,14 @@ import br.com.urso.user.entity.User;
 import br.com.urso.user.entity.UserReview;
 import br.com.urso.user.repository.UserRepository;
 import br.com.urso.user.repository.UserReviewRepository;
+import br.com.urso.user.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.PostConstruct;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Month;
@@ -36,21 +38,29 @@ public class ProdProfileService {
     @Autowired
     UserRepository userRepository;
 
+    @Autowired
+    UserService us;
+
+    @PostConstruct
     public void InstantiateDataBase() {
-        User user1 = createUser(new User());
-        userRepository.save(user1);
-        log.info("|----- Admin em PROD inserido com sucesso-----|");
+        User user = createUser(new User());
+        if(!userRepository.findByEmail(user.getEmail()).isPresent()) {
+            userRepository.save(user);
+            log.info("|----- Admin em PROD inserido com sucesso-----|");
+        }else{
+            log.info("|----- Admin em PROD existente-----|");
+        }
     }
+
 
     private User createUser(User u) {
         u.setBirth(LocalDate.now());
         u.setEmail("teste@teste.com");
-        u.setJoinDate(LocalDate.now());
+        u.setJoinDate(LocalDate.parse("2022-10-10"));
         u.setName("Admin 1");
         u.setSurname("Original");
         u.setAdmin(true);
-//        u.setPassword(encoder.encode("1234"));
-        u.setPassword("!1@2#3$4");
+        u.setPassword(encoder.encode("1234"));
         u.setProvider(AuthProvider.local);
         return u;
 
