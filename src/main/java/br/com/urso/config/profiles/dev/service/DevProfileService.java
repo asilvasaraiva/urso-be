@@ -20,6 +20,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.PostConstruct;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Month;
@@ -57,8 +58,9 @@ public class DevProfileService {
 
 
 
+    @PostConstruct
     public  void InstantiateDataBase(){
-
+        log.info("USANDO PROFILE DE DESENVOLVIMENTO");
     // Generic Users
         User user1 = createUser(new User());
         User user4 = createUser(new User());
@@ -67,13 +69,15 @@ public class DevProfileService {
 
         user1.setPassword(encoder.encode("1234"));
         user1.setEmail("meuteste@a.com");
-        user2.setEmail("admin@1");
+        user2.setEmail("puc@admin.com");
+        user4.setEmail("validacao@teste.com");
+        user3.setEmail("adm@meusite.com");
         user2.setAdmin(true);
         user2.setPassword(encoder.encode("1234"));
 
         user4.setName("usuário 4");
-        user2.setName("User 2");
-        user3.setName("User 3");
+        user2.setName("Puc Admin");
+        user3.setName("Usuário Validação");
 
         userRepository.saveAll(Arrays.asList(user1,user2,user3,user4));
 
@@ -176,16 +180,29 @@ public class DevProfileService {
 
 
     //Admin Messages
-        AdminMessage adminMessage = AdminMessage.builder().content("huehueheuheu").idUserSender(user1.getIdUser())
+        AdminMessage adminMessage = AdminMessage.builder().content("Temos poucos administradores para nos atender").idUserSender(user1.getIdUser())
                 .isRead(true)
                 .typeOf("sugestion")
                 .title("Colocar mais Adms")
                 .createAt(LocalDateTime.now())
                 .build();
-        //adminRepository.save(adminMessage);
+
+        AdminMessage adminMessage3 = AdminMessage.builder().content("Esse aplicativo é muito útil, conseguiu me ajudar e superou mnhas expectativas").idUserSender(user1.getIdUser())
+                .isRead(false)
+                .typeOf("sugestion")
+                .title("Agradecimento")
+                .createAt(LocalDateTime.now())
+                .build();
+
+        AdminMessage adminMessage4 = AdminMessage.builder().content("Não consigo encontrar o chat sobre: 'como ser aprovado' fácilmente, favor verificar").idUserSender(user1.getIdUser())
+                .isRead(false)
+                .typeOf("complain")
+                .title("Localizar Chat")
+                .createAt(LocalDateTime.now())
+                .build();
 
         AdminMessage adminMessage2 = new AdminMessage();
-        adminMessage2.setContent("Reclamação sobre 92929222j2j29j");
+        adminMessage2.setContent("Reclamação sobre funcionalidades ainda não implementadas no App");
         adminMessage2.setIdUserSender(user2.getIdUser());
         adminMessage2.setRead(false);
         adminMessage2.setTypeOf("complain");
@@ -193,7 +210,7 @@ public class DevProfileService {
         adminMessage2.setCreateAt(LocalDateTime.now());
 
 
-        adminRepository.saveAll(Arrays.asList(adminMessage, adminMessage2));
+        adminRepository.saveAll(Arrays.asList(adminMessage, adminMessage2,adminMessage3,adminMessage4));
         //adminRepository.save(adminMessage2);
 
 
@@ -251,7 +268,7 @@ public class DevProfileService {
         u.setJoinDate(dt);
         u.setName("Teste 1");
         u.setSurname("Lorem");
-        u.setPassword("asdqwe");
+        u.setPassword(encoder.encode("1234"));
         u.setProvider(AuthProvider.local);
         return u;
 
@@ -311,10 +328,5 @@ public class DevProfileService {
         return list;
     }
 
-
-
-    public void teste(){
-        log.info("|----- Utilizando Profile de Teste -----|");
-    }
 
 }
