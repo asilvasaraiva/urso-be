@@ -64,19 +64,19 @@ public class DevProfileService {
     // Generic Users
         User user1 = createUser(new User());
         User user4 = createUser(new User());
-        User user2 = createUser();
+        User user2 = createPucUser();
         User user3 = createUser();
 
         user1.setPassword(encoder.encode("1234"));
         user1.setEmail("meuteste@a.com");
-        user2.setEmail("puc@admin.com");
+
+
         user4.setEmail("validacao@teste.com");
         user3.setEmail("adm@meusite.com");
-        user2.setAdmin(true);
-        user2.setPassword(encoder.encode("1234"));
+
 
         user4.setName("usuário 4");
-        user2.setName("Puc Admin");
+
         user3.setName("Usuário Validação");
 
         userRepository.saveAll(Arrays.asList(user1,user2,user3,user4));
@@ -256,7 +256,21 @@ public class DevProfileService {
                 .joinDate(dt)
                 .name("Teste 1")
                 .surname("Lorem")
-                .password("asdqwe")
+                .password(encoder.encode("1234"))
+                .userChats(new ArrayList<Chat>())
+                .reviews(new ArrayList<UserReview>())
+                .build();
+    }
+
+    private User createPucUser(){
+        return  User.builder()
+                .birth(dt)
+                .email("puc@admin.com")
+                .joinDate(LocalDate.parse("1990-10-08"))
+                .name("Puc Admin")
+                .isAdmin(true)
+                .surname("Avaliadores")
+                .password(encoder.encode("puc1324"))
                 .userChats(new ArrayList<Chat>())
                 .reviews(new ArrayList<UserReview>())
                 .build();
@@ -271,7 +285,6 @@ public class DevProfileService {
         u.setPassword(encoder.encode("1234"));
         u.setProvider(AuthProvider.local);
         return u;
-
     }
 
     private UserReview createUserReview(){
